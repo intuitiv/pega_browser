@@ -93,7 +93,7 @@ chrome.runtime.onConnect.addListener(port => {
             currentExecutor = await setupExecutor(message.taskId, message.task, browserContext);
             subscribeToExecutorEvents(currentExecutor);
 
-            const result = await currentExecutor.execute();
+            const result = await currentExecutor.execute(message.mode);
             logger.info('new_task execution result', message.tabId, result);
             break;
           }
@@ -109,7 +109,7 @@ chrome.runtime.onConnect.addListener(port => {
               currentExecutor.addFollowUpTask(message.task);
               // Re-subscribe to events in case the previous subscription was cleaned up
               subscribeToExecutorEvents(currentExecutor);
-              const result = await currentExecutor.execute();
+              const result = await currentExecutor.execute(message.mode);
               logger.info('follow_up_task execution result', message.tabId, result);
             } else {
               // executor was cleaned up, can not add follow-up task
@@ -222,7 +222,7 @@ chrome.runtime.onConnect.addListener(port => {
               subscribeToExecutorEvents(currentExecutor);
 
               // Run replayHistory with the history session ID
-              const result = await currentExecutor.replayHistory(message.historySessionId);
+              const result = await currentExecutor.replayHistory(message.historySessionId, message.mode);
               logger.debug('replay execution result', message.tabId, result);
             } catch (error) {
               logger.error('Replay failed:', error);

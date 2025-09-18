@@ -10,7 +10,6 @@ import { t } from '@extension/i18n';
 import MessageList from './components/MessageList';
 import ChatInput from './components/ChatInput';
 import ChatHistoryList from './components/ChatHistoryList';
-import BookmarkList from './components/BookmarkList';
 import { EventType, type AgentEvent, ExecutionState } from './types/event';
 import './SidePanel.css';
 
@@ -47,7 +46,7 @@ const SidePanel = () => {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const recordingTimerRef = useRef<number | null>(null);
-
+  const [mode, setMode] = useState<'architect' | 'dev'>('architect');
   // Check for dark mode preference
   useEffect(() => {
     const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -615,6 +614,7 @@ const SidePanel = () => {
           task: text,
           taskId: sessionIdRef.current,
           tabId,
+          mode,
         });
         console.log('follow_up_task sent', text, tabId, sessionIdRef.current);
       } else {
@@ -624,6 +624,7 @@ const SidePanel = () => {
           task: text,
           taskId: sessionIdRef.current,
           tabId,
+          mode,
         });
         console.log('new_task sent', text, tabId, sessionIdRef.current);
       }
@@ -751,49 +752,6 @@ const SidePanel = () => {
       }
     } catch (error) {
       console.error('Failed to pin session to favorites:', error);
-    }
-  };
-
-  const handleBookmarkSelect = (content: string) => {
-    if (setInputTextRef.current) {
-      setInputTextRef.current(content);
-    }
-  };
-
-  const handleBookmarkUpdateTitle = async (id: number, title: string) => {
-    try {
-      await favoritesStorage.updatePromptTitle(id, title);
-
-      // Update favorites in the UI
-      const prompts = await favoritesStorage.getAllPrompts();
-      setFavoritePrompts(prompts);
-    } catch (error) {
-      console.error('Failed to update favorite prompt title:', error);
-    }
-  };
-
-  const handleBookmarkDelete = async (id: number) => {
-    try {
-      await favoritesStorage.removePrompt(id);
-
-      // Update favorites in the UI
-      const prompts = await favoritesStorage.getAllPrompts();
-      setFavoritePrompts(prompts);
-    } catch (error) {
-      console.error('Failed to delete favorite prompt:', error);
-    }
-  };
-
-  const handleBookmarkReorder = async (draggedId: number, targetId: number) => {
-    try {
-      // Directly pass IDs to storage function - it now handles the reordering logic
-      await favoritesStorage.reorderPrompts(draggedId, targetId);
-
-      // Fetch the updated list from storage to get the new IDs and reflect the authoritative order
-      const updatedPromptsFromStorage = await favoritesStorage.getAllPrompts();
-      setFavoritePrompts(updatedPromptsFromStorage);
-    } catch (error) {
-      console.error('Failed to reorder favorite prompts:', error);
     }
   };
 
@@ -1121,6 +1079,26 @@ const SidePanel = () => {
             {/* Show normal chat interface when models are configured */}
             {hasConfiguredModels === true && (
               <>
+                {/* Mode Dropdown */}
+                <div className="mb-2 flex items-center gap-2 pt-3 pl-3">
+                  <input
+                    type="checkbox"
+                    id="mode-toggle"
+                    className="sr-only peer"
+                    checked={mode === 'architect'}
+                    onChange={() => setMode(mode === 'dev' ? 'architect' : 'dev')}
+                  />
+                  <label htmlFor="mode-toggle" className="inline-flex items-center cursor-pointer select-none">
+                    <span
+                      className={`flex h-6 w-12 items-center rounded-full transition-colors duration-200 ${mode === 'architect' ? 'bg-sky-500' : 'bg-gray-300'}`}>
+                      <span
+                        className={`size-5 rounded-full bg-white shadow transform transition-transform duration-200 ${mode === 'architect' ? 'translate-x-6' : 'translate-x-1'}`}></span>
+                    </span>
+                    <span className={`ml-2 text-sm font-medium ${isDarkMode ? 'text-sky-300' : 'text-sky-600'}`}>
+                      {mode === 'architect' ? 'Architect' : 'Developer'}
+                    </span>
+                  </label>
+                </div>
                 {messages.length === 0 && (
                   <>
                     <div
@@ -1139,16 +1117,6 @@ const SidePanel = () => {
                         isDarkMode={isDarkMode}
                         historicalSessionId={isHistoricalSession && replayEnabled ? currentSessionId : null}
                         onReplay={handleReplay}
-                      />
-                    </div>
-                    <div className="flex-1 overflow-y-auto">
-                      <BookmarkList
-                        bookmarks={favoritePrompts}
-                        onBookmarkSelect={handleBookmarkSelect}
-                        onBookmarkUpdateTitle={handleBookmarkUpdateTitle}
-                        onBookmarkDelete={handleBookmarkDelete}
-                        onBookmarkReorder={handleBookmarkReorder}
-                        isDarkMode={isDarkMode}
                       />
                     </div>
                   </>

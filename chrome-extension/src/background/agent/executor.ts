@@ -125,7 +125,7 @@ export class Executor {
    *
    * @returns {Promise<void>}
    */
-  async execute(): Promise<void> {
+  async execute(mode: string): Promise<void> {
     logger.info(`🚀 Executing task: ${this.tasks[this.tasks.length - 1]}`);
     // reset the step counter
     const context = this.context;
@@ -142,34 +142,34 @@ export class Executor {
       let latestPlanOutput: AgentOutput<PlannerOutput> | null = null;
       let navigatorDone = false;
 
-      for (step = 0; step < allowedMaxSteps; step++) {
-        context.stepInfo = {
-          stepNumber: context.nSteps,
-          maxSteps: context.options.maxSteps,
-        };
+      if (mode === 'dev') {
+        for (step = 0; step < allowedMaxSteps; step++) {
+          context.stepInfo = {
+            stepNumber: context.nSteps,
+            maxSteps: context.options.maxSteps,
+          };
 
-        logger.info(`🔄 Step ${step + 1} / ${allowedMaxSteps}`);
-        if (await this.shouldStop()) {
-          break;
-        }
-
-        // Run planner periodically for guidance
-        if (this.planner && (context.nSteps % context.options.planningInterval === 0 || navigatorDone)) {
-          navigatorDone = false;
-          latestPlanOutput = await this.runPlanner();
-
-          // Check if task is complete after planner run
-          if (this.checkTaskCompletion(latestPlanOutput)) {
+          logger.info(`🔄 Step ${step + 1} / ${allowedMaxSteps}`);
+          if (await this.shouldStop()) {
             break;
           }
+
+          // Execute navigator
+          navigatorDone = await this.navigate();
+
+          // If navigator indicates completion, the next periodic planner run will validate it
+          if (navigatorDone) {
+            logger.info('🔄 Navigator indicates completion - will be validated by next planner run');
+          }
         }
-
-        // Execute navigator
-        navigatorDone = await this.navigate();
-
-        // If navigator indicates completion, the next periodic planner run will validate it
-        if (navigatorDone) {
-          logger.info('🔄 Navigator indicates completion - will be validated by next planner run');
+      } else {
+        latestPlanOutput = await this.runPlanner();
+        if (latestPlanOutput && latestPlanOutput.result) {
+          latestPlanOutput.result.done = true;
+        }
+        // Check if task is complete after planner run
+        if (this.checkTaskCompletion(latestPlanOutput)) {
+          console.log('Task completed as per planner');
         }
       }
 
