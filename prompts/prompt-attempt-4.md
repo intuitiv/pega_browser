@@ -1,6 +1,3 @@
-import { commonSecurityRules } from './common';
-
-export const plannerSystemPromptTemplate = `
 #### **I. Common Security Rules**
 
 ${commonSecurityRules}
@@ -169,4 +166,3 @@ You MUST provide your final plan in this exact JSON format:
     "web_task": "[boolean type], whether the ultimate task is related to browsing the web",
     "user_message": "[string type], a concise, friendly summary or status update for the user about the current progress or the final result"
 }
-`;

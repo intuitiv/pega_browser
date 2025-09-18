@@ -41,6 +41,7 @@ export const plannerOutputSchema = z.object({
       throw new Error('Invalid boolean string');
     }),
   ]),
+  user_message: z.string(),
 });
 
 export type PlannerOutput = z.infer<typeof plannerOutputSchema>;
@@ -88,6 +89,7 @@ export class PlannerAgent extends BaseAgent<typeof plannerOutputSchema, PlannerO
       const next_steps = filterExternalContent(modelOutput.next_steps);
       const challenges = filterExternalContent(modelOutput.challenges);
       const reasoning = filterExternalContent(modelOutput.reasoning);
+      const user_message = filterExternalContent(modelOutput.user_message);
 
       const cleanedPlan: PlannerOutput = {
         ...modelOutput,
@@ -96,6 +98,7 @@ export class PlannerAgent extends BaseAgent<typeof plannerOutputSchema, PlannerO
         reasoning,
         final_answer,
         next_steps,
+        user_message,
       };
 
       // If task is done, emit the final answer; otherwise emit next steps
