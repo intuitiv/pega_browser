@@ -1,5 +1,11 @@
 export const launchpadUiKnowledge = `
-- Instruction for Drop downs:
+- Navigation steps to open an Integration Systems Rule Instance:
+	1. In the main navigation pane on left hand side, locate and click the "Rules Library" link.
+	2. In the list of rule categories, locate and expand the "Integration" node.
+	3. Within the expanded "Integration" node, locate and click the "Integration Systems" link.
+	4. You will get a list of integration systems rules. Locate and click the name of the specific rule you want to open.
+
+- Instruction for handling Drop downs:
     1. To select an item from a Launchpad dropdown list, first click on the dropdown arrow or chevron icon on the right-most section of the dropdown element. 
     2. Then, from the expanded list, select the desired item. 
     3. Do not click on the main link/text of the dropdown before expanding the list.
