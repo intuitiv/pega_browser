@@ -12,6 +12,7 @@ window.buildDomTree = (
     args;
   // Make sure to do highlight elements always, but we can hide the highlights if needed
   const doHighlightElements = true;
+  const disableHighlight = true;
 
   let highlightIndex = startHighlightIndex; // Reset highlight index
 
@@ -150,7 +151,7 @@ window.buildDomTree = (
         container.style.zIndex = '2147483647';
         container.style.backgroundColor = 'transparent';
         // Show or hide the container based on the showHighlightElements flag
-        container.style.display = showHighlightElements ? 'block' : 'none';
+        container.style.display = showHighlightElements && !disableHighlight ? 'block' : 'none';
         document.body.appendChild(container);
       }
 

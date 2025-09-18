@@ -88,6 +88,7 @@ const manifest = withOperaSidebar(
           '*.svg',
           'icon-128.png',
           'icon-32.png',
+          'buildDomTree.js',
           'permission/index.html',
           'permission/permission.js',
         ],
