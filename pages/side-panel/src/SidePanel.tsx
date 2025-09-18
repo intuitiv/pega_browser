@@ -28,6 +28,10 @@ const SidePanel = () => {
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const [showHistory, setShowHistory] = useState(false);
   const [chatSessions, setChatSessions] = useState<Array<{ id: string; title: string; createdAt: number }>>([]);
+  const [currentTabInfo, setCurrentTabInfo] = useState<{ title: string; favIconUrl: string }>({
+    title: '',
+    favIconUrl: '',
+  });
   const [isFollowUpMode, setIsFollowUpMode] = useState(false);
   const [isHistoricalSession, setIsHistoricalSession] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -58,6 +62,38 @@ const SidePanel = () => {
 
     darkModeMediaQuery.addEventListener('change', handleChange);
     return () => darkModeMediaQuery.removeEventListener('change', handleChange);
+  }, []);
+
+  useEffect(() => {
+    const fetchTabInfo = async () => {
+      const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (tabs[0]) {
+        setCurrentTabInfo({
+          title: tabs[0].title || '',
+          favIconUrl: tabs[0].favIconUrl || '',
+        });
+      }
+    };
+
+    fetchTabInfo();
+
+    const tabUpdateListener = (tabId, changeInfo, tab) => {
+      if (changeInfo.status === 'complete' || changeInfo.favIconUrl) {
+        fetchTabInfo();
+      }
+    };
+
+    const tabActivatedListener = () => {
+      fetchTabInfo();
+    };
+
+    chrome.tabs.onUpdated.addListener(tabUpdateListener);
+    chrome.tabs.onActivated.addListener(tabActivatedListener);
+
+    return () => {
+      chrome.tabs.onUpdated.removeListener(tabUpdateListener);
+      chrome.tabs.onActivated.removeListener(tabActivatedListener);
+    };
   }, []);
 
   // Check if models are configured
@@ -433,7 +469,10 @@ const SidePanel = () => {
       }
 
       // Create a new chat session for this replay task
-      const newSession = await chatHistoryStore.createSession(`Replay of ${historySessionId.substring(0, 20)}...`);
+      const newSession = await chatHistoryStore.createSession(
+        `Replay of ${historySessionId.substring(0, 20)}...`,
+        tabId,
+      );
       console.log('newSession for replay', newSession);
 
       // Store the new session ID in both state and ref
@@ -583,6 +622,7 @@ const SidePanel = () => {
       if (!isFollowUpMode) {
         const newSession = await chatHistoryStore.createSession(
           text.substring(0, 50) + (text.length > 50 ? '...' : ''),
+          tabId,
         );
         console.log('newSession', newSession);
 
@@ -676,7 +716,9 @@ const SidePanel = () => {
 
   const loadChatSessions = useCallback(async () => {
     try {
-      const sessions = await chatHistoryStore.getSessionsMetadata();
+      const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+      const tabId = tabs[0]?.id;
+      const sessions = await chatHistoryStore.getSessionsMetadata(tabId);
       setChatSessions(sessions.sort((a, b) => b.createdAt - a.createdAt));
     } catch (error) {
       console.error('Failed to load chat sessions:', error);
@@ -974,29 +1016,6 @@ const SidePanel = () => {
             )}
           </div>
           <div className="header-icons">
-            {/* Mode Dropdown */}
-            <div className="flex rounded-full bg-gray-200 dark:bg-gray-700 p-0.5">
-              <button
-                type="button"
-                className={`px-3 py-0.5 text-xs font-medium rounded-full ${
-                  mode === 'architect'
-                    ? 'bg-sky-500 text-white'
-                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
-                }`}
-                onClick={() => setMode('architect')}>
-                Plan
-              </button>
-              <button
-                type="button"
-                className={`px-3 py-0.5 text-xs font-medium rounded-full ${
-                  mode === 'dev'
-                    ? 'bg-sky-500 text-white'
-                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
-                }`}
-                onClick={() => setMode('dev')}>
-                Act
-              </button>
-            </div>
             {!showHistory && (
               <>
                 <button
@@ -1102,55 +1121,37 @@ const SidePanel = () => {
             {/* Show normal chat interface when models are configured */}
             {hasConfiguredModels === true && (
               <>
-                {messages.length === 0 && (
-                  <>
-                    <div
-                      className={`border-t ${isDarkMode ? 'border-sky-900' : 'border-sky-100'} mb-2 p-2 shadow-sm backdrop-blur-sm`}>
-                      <ChatInput
-                        onSendMessage={handleSendMessage}
-                        onStopTask={handleStopTask}
-                        onMicClick={handleMicClick}
-                        isRecording={isRecording}
-                        isProcessingSpeech={isProcessingSpeech}
-                        disabled={!inputEnabled || isHistoricalSession}
-                        showStopButton={showStopButton}
-                        setContent={setter => {
-                          setInputTextRef.current = setter;
-                        }}
-                        isDarkMode={isDarkMode}
-                        historicalSessionId={isHistoricalSession && replayEnabled ? currentSessionId : null}
-                        onReplay={handleReplay}
-                      />
+                <div
+                  className={`flex-1 overflow-y-auto ${messages.length > 0 ? 'scrollbar-gutter-stable' : ''} p-2 ${isDarkMode ? 'bg-slate-900/80' : ''}`}>
+                  {messages.length > 0 && <MessageList messages={messages} isDarkMode={isDarkMode} />}
+                  <div ref={messagesEndRef} />
+                </div>
+                <div
+                  className={`border-t ${isDarkMode ? 'border-sky-900' : 'border-sky-100'} p-2 shadow-sm backdrop-blur-sm`}>
+                  {currentTabInfo.title && (
+                    <div className="flex items-center rounded-md bg-gray-200/50 px-2 py-1.5 dark:bg-gray-700/50">
+                      <img src={currentTabInfo.favIconUrl} alt="favicon" className="mr-2 size-4" />
+                      <span className="truncate text-xs text-gray-600 dark:text-gray-300">{currentTabInfo.title}</span>
                     </div>
-                  </>
-                )}
-                {messages.length > 0 && (
-                  <div
-                    className={`scrollbar-gutter-stable flex-1 overflow-x-hidden overflow-y-scroll scroll-smooth p-2 ${isDarkMode ? 'bg-slate-900/80' : ''}`}>
-                    <MessageList messages={messages} isDarkMode={isDarkMode} />
-                    <div ref={messagesEndRef} />
-                  </div>
-                )}
-                {messages.length > 0 && (
-                  <div
-                    className={`border-t ${isDarkMode ? 'border-sky-900' : 'border-sky-100'} p-2 shadow-sm backdrop-blur-sm`}>
-                    <ChatInput
-                      onSendMessage={handleSendMessage}
-                      onStopTask={handleStopTask}
-                      onMicClick={handleMicClick}
-                      isRecording={isRecording}
-                      isProcessingSpeech={isProcessingSpeech}
-                      disabled={!inputEnabled || isHistoricalSession}
-                      showStopButton={showStopButton}
-                      setContent={setter => {
-                        setInputTextRef.current = setter;
-                      }}
-                      isDarkMode={isDarkMode}
-                      historicalSessionId={isHistoricalSession && replayEnabled ? currentSessionId : null}
-                      onReplay={handleReplay}
-                    />
-                  </div>
-                )}
+                  )}
+                  <ChatInput
+                    onSendMessage={handleSendMessage}
+                    onStopTask={handleStopTask}
+                    onMicClick={handleMicClick}
+                    isRecording={isRecording}
+                    isProcessingSpeech={isProcessingSpeech}
+                    disabled={!inputEnabled || isHistoricalSession}
+                    showStopButton={showStopButton}
+                    setContent={setter => {
+                      setInputTextRef.current = setter;
+                    }}
+                    isDarkMode={isDarkMode}
+                    historicalSessionId={isHistoricalSession && replayEnabled ? currentSessionId : null}
+                    onReplay={handleReplay}
+                    mode={mode}
+                    setMode={setMode}
+                  />
+                </div>
               </>
             )}
           </>

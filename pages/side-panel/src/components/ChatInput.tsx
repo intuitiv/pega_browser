@@ -16,6 +16,8 @@ interface ChatInputProps {
   // Historical session ID - if provided, shows replay button instead of send button
   historicalSessionId?: string | null;
   onReplay?: (sessionId: string) => void;
+  mode: 'architect' | 'dev';
+  setMode: (mode: 'architect' | 'dev') => void;
 }
 
 export default function ChatInput({
@@ -30,6 +32,8 @@ export default function ChatInput({
   isDarkMode = false,
   historicalSessionId,
   onReplay,
+  mode,
+  setMode,
 }: ChatInputProps) {
   const [text, setText] = useState('');
   const isSendButtonDisabled = useMemo(() => disabled || text.trim() === '', [disabled, text]);
@@ -153,31 +157,56 @@ export default function ChatInput({
             )}
           </div>
 
-          {showStopButton ? (
-            <button
-              type="button"
-              onClick={onStopTask}
-              className="rounded-md bg-red-500 px-3 py-1 text-white transition-colors hover:bg-red-600">
-              {t('chat_buttons_stop')}
-            </button>
-          ) : historicalSessionId ? (
-            <button
-              type="button"
-              onClick={handleReplay}
-              disabled={!historicalSessionId}
-              aria-disabled={!historicalSessionId}
-              className={`rounded-md bg-green-500 px-3 py-1 text-white transition-colors hover:enabled:bg-green-600 ${!historicalSessionId ? 'cursor-not-allowed opacity-50' : ''}`}>
-              {t('chat_buttons_replay')}
-            </button>
-          ) : (
-            <button
-              type="submit"
-              disabled={isSendButtonDisabled}
-              aria-disabled={isSendButtonDisabled}
-              className={`rounded-md bg-[#19C2FF] px-3 py-1 text-white transition-colors hover:enabled:bg-[#0073DC] ${isSendButtonDisabled ? 'cursor-not-allowed opacity-50' : ''}`}>
-              {t('chat_buttons_send')}
-            </button>
-          )}
+          <div className="flex items-center gap-2">
+            {/* Mode Dropdown */}
+            <div className="flex rounded-full bg-gray-200 dark:bg-gray-700 p-0.5">
+              <button
+                type="button"
+                className={`px-3 py-0.5 text-xs font-medium rounded-l-full ${
+                  mode === 'architect'
+                    ? 'bg-sky-500 text-white'
+                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                }`}
+                onClick={() => setMode('architect')}>
+                Plan
+              </button>
+              <button
+                type="button"
+                className={`px-3 py-0.5 text-xs font-medium rounded-r-full ${
+                  mode === 'dev'
+                    ? 'bg-orange-500 text-white'
+                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                }`}
+                onClick={() => setMode('dev')}>
+                Act
+              </button>
+            </div>
+            {showStopButton ? (
+              <button
+                type="button"
+                onClick={onStopTask}
+                className="rounded-md bg-red-500 px-3 py-1 text-white transition-colors hover:bg-red-600">
+                {t('chat_buttons_stop')}
+              </button>
+            ) : historicalSessionId ? (
+              <button
+                type="button"
+                onClick={handleReplay}
+                disabled={!historicalSessionId}
+                aria-disabled={!historicalSessionId}
+                className={`rounded-md bg-green-500 px-3 py-1 text-white transition-colors hover:enabled:bg-green-600 ${!historicalSessionId ? 'cursor-not-allowed opacity-50' : ''}`}>
+                {t('chat_buttons_replay')}
+              </button>
+            ) : (
+              <button
+                type="submit"
+                disabled={isSendButtonDisabled}
+                aria-disabled={isSendButtonDisabled}
+                className={`rounded-md bg-[#19C2FF] px-3 py-1 text-white transition-colors hover:enabled:bg-[#0073DC] ${isSendButtonDisabled ? 'cursor-not-allowed opacity-50' : ''}`}>
+                {t('chat_buttons_send')}
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </form>
