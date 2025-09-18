@@ -36,24 +36,23 @@ export interface ExecutorExtraArgs {
 }
 
 export class Executor {
-  private readonly navigator: NavigatorAgent;
-  private readonly planner: PlannerAgent;
+  private navigator: NavigatorAgent;
+  private planner: PlannerAgent;
   private readonly context: AgentContext;
   private readonly plannerPrompt: PlannerPrompt;
   private readonly navigatorPrompt: NavigatorPrompt;
   private readonly generalSettings: GeneralSettingsConfig | undefined;
   private tasks: string[] = [];
+  private isInitialized = false;
+
   constructor(
     task: string,
     taskId: string,
     browserContext: BrowserContext,
-    navigatorLLM: BaseChatModel,
-    extraArgs?: Partial<ExecutorExtraArgs>,
+    private navigatorLLM: BaseChatModel,
+    private extraArgs?: Partial<ExecutorExtraArgs>,
   ) {
     const messageManager = new MessageManager();
-
-    const plannerLLM = extraArgs?.plannerLLM ?? navigatorLLM;
-    const extractorLLM = extraArgs?.extractorLLM ?? navigatorLLM;
     const eventManager = new EventManager();
     const context = new AgentContext(
       taskId,
@@ -67,26 +66,36 @@ export class Executor {
     this.tasks.push(task);
     this.navigatorPrompt = new NavigatorPrompt(context.options.maxActionsPerStep);
     this.plannerPrompt = new PlannerPrompt();
+    this.context = context;
+  }
 
-    const actionBuilder = new ActionBuilder(context, extractorLLM);
+  async init() {
+    if (this.isInitialized) {
+      return;
+    }
+
+    const plannerLLM = this.extraArgs?.plannerLLM ?? this.navigatorLLM;
+    const extractorLLM = this.extraArgs?.extractorLLM ?? this.navigatorLLM;
+    const actionBuilder = new ActionBuilder(this.context, extractorLLM);
     const navigatorActionRegistry = new NavigatorActionRegistry(actionBuilder.buildDefaultActions());
 
     // Initialize agents with their respective prompts
     this.navigator = new NavigatorAgent(navigatorActionRegistry, {
-      chatLLM: navigatorLLM,
-      context: context,
+      chatLLM: this.navigatorLLM,
+      context: this.context,
       prompt: this.navigatorPrompt,
     });
 
     this.planner = new PlannerAgent({
       chatLLM: plannerLLM,
-      context: context,
+      context: this.context,
       prompt: this.plannerPrompt,
     });
 
-    this.context = context;
     // Initialize message history
-    this.context.messageManager.initTaskMessages(this.navigatorPrompt.getSystemMessage(), task);
+    const systemMessage = await this.navigatorPrompt.getSystemMessage(this.context);
+    this.context.messageManager.initTaskMessages(systemMessage, this.tasks[0]);
+    this.isInitialized = true;
   }
 
   subscribeExecutionEvents(callback: EventCallback): void {
@@ -126,6 +135,9 @@ export class Executor {
    * @returns {Promise<void>}
    */
   async execute(): Promise<void> {
+    if (!this.isInitialized) {
+      await this.init();
+    }
     logger.info(`🚀 Executing task: ${this.tasks[this.tasks.length - 1]}`);
     // reset the step counter
     const context = this.context;
