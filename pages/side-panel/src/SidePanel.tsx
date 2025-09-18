@@ -975,24 +975,27 @@ const SidePanel = () => {
           </div>
           <div className="header-icons">
             {/* Mode Dropdown */}
-            <div className="mb-2 flex items-center gap-2 pt-3 pl-3">
-              <input
-                type="checkbox"
-                id="mode-toggle"
-                className="sr-only peer"
-                checked={mode === 'architect'}
-                onChange={() => setMode(mode === 'dev' ? 'architect' : 'dev')}
-              />
-              <label htmlFor="mode-toggle" className="inline-flex items-center cursor-pointer select-none">
-                <span
-                  className={`flex h-6 w-12 items-center rounded-full transition-colors duration-200 ${mode === 'architect' ? 'bg-sky-500' : 'bg-gray-300'}`}>
-                  <span
-                    className={`size-5 rounded-full bg-white shadow transform transition-transform duration-200 ${mode === 'architect' ? 'translate-x-6' : 'translate-x-1'}`}></span>
-                </span>
-                <span className={`ml-2 text-sm font-medium ${isDarkMode ? 'text-sky-300' : 'text-sky-600'}`}>
-                  {mode === 'architect' ? 'Architect' : 'Developer'}
-                </span>
-              </label>
+            <div className="flex rounded-full bg-gray-200 dark:bg-gray-700 p-0.5">
+              <button
+                type="button"
+                className={`px-3 py-0.5 text-xs font-medium rounded-full ${
+                  mode === 'architect'
+                    ? 'bg-sky-500 text-white'
+                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                }`}
+                onClick={() => setMode('architect')}>
+                Plan
+              </button>
+              <button
+                type="button"
+                className={`px-3 py-0.5 text-xs font-medium rounded-full ${
+                  mode === 'dev'
+                    ? 'bg-sky-500 text-white'
+                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                }`}
+                onClick={() => setMode('dev')}>
+                Act
+              </button>
             </div>
             {!showHistory && (
               <>
