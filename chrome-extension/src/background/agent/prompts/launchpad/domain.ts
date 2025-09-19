@@ -2,7 +2,7 @@ export const launchpadDomainKnowledge = `
 
 ### **Library**
 
-In Launchpad, a **library** is a logical grouping of rules that defines the scope for various components in your application. When creating a new rule, you will see a "Library" dropdown. You should select the appropriate library and should not typically create a new one unless specifically instructed.
+In Launchpad, a **library** is a logical grouping of rules that defines the scope for various components in your application. When creating a new rule, you will often see a "Library" dropdown. You should select the appropriate library and should not typically need to create a new one unless specifically instructed.
 
 ### **Integration Systems**
 
@@ -19,8 +19,6 @@ An **Integration System** is a reusable component that establishes a secure and 
       - **Static URL**: Provide a fixed base URL directly in the "Base URL" field.
       - **Dynamic URLs**: Use \`Configuration Setting\` objects to define different base URLs for various environments (e.g., development, staging, production).
   - **Authentication Profile**: Select or create an appropriate authentication profile using the picker dropdown in the UI.
-
------
 
 ### **REST Connectors**
 
@@ -64,20 +62,21 @@ Let us create a REST Connector for a \`PUT\` endpoint with a path parameter, bas
 To create or update the connector for the \`PUT /api/v1/Books/{id}\` endpoint, follow these steps:
 
 1. To create a new REST Connector, follow the navigation steps to create a new rule of type **Rest Connector**.
-    1. Provide appropriate values e.g. Name, Description and select an appropriate **Library**  using the picker dropdown.
+    1. Provide appropriate values e.g. Name, Description and select an appropriate **Library**  using the picker dropdown in the Create new rule dialog.
     2. If you are unsure which Library to select, choose the first option in the list.
 
 2. To open and edit an existing REST Connector, follow the navigation steps to open a rule of type **Rest Connector**.
 
-3. Select or Create an **Integration System** based on your requirements using the picker dropdown in the **Service** tab.
-    1. In this example, we can create a new Integration System named \`BooksAPISystem\` with the Base URL set to \`https://example.com\` and select appropriate authentication like oauth.
-    2. Since this rule creation will open a new tab, recall instructions to create a new rule instance as part of an ongoing flow.
+3. Select or Create an **Integration System** based on the suggested plan using the picker dropdown in the **Service** tab.
+    1. In the example above, we can create a new Integration System named \`BooksAPISystem\` with the Base URL set to \`https://example.com\` and select appropriate authentication like oauth.
+    2. Since this rule creation will open a new tab, recall instructions for creating a new rule in a separate tab as part of an ongoing flow, to create a new rule instance as part of an ongoing flow.
 
 4. **Define Input Parameter** using Parameter tab
-    1.  Navigate to the **Parameters** tab.
-    2.  Add a new input parameter.
-    3.  Set its **Name** to \`id\`.
-    4.  Based on the schema (\`type: "integer"\`), set its **Type** to **Integer** using the "Type Selector" dropdown
+    1. Identify the path parameter from the OpenAPI spec. In this case, we have one path parameter named \`id\`. 
+    2. Navigate to the **Parameters** tab.
+    3. Add a new input parameter.
+    4. Set its **Name** to \`id\`.
+    5. Based on the schema (\`type: "integer"\`), set its **Type** to **Integer** using the "Type Selector" dropdown
 
 5.  **Configure HTTP method**
     1.  Navigate back to the **Service** tab.
@@ -86,25 +85,29 @@ To create or update the connector for the \`PUT /api/v1/Books/{id}\` endpoint, f
 6.  **Configure Resource Path Parameters**
     In the **Resource path parameters** section, add four parameters in sequence to construct the full path corresponding to each element in our example path - \`/api/v1/Books/{id}\`
 
-      - **Parameter #1 (Static Segment \`api\`)**
+      - **Parameter #1 (Static Parameter \`api\`)**
 
-        1.  Set the **Name** to \`path_segment_1\`.
-        2.  For the **Parameter value**, select **Static(Text)**, and enter \`api\` in the text box using the "composite UI component".
+        1. Set the **Name** to \`path_segment_1\`.
+        2. For the **Parameter value**, select **Static(Text)**, and enter \`api\` in the text box using the "composite UI component".
+        3. Choose **encoding** as **None**.
 
-      - **Parameter #2 (Static Segment \`v1\`)**
+      - **Parameter #2 (Static Parameter \`v1\`)**
 
-        1.  Set the **Name** to \`path_segment_2\`.
-        2.  For the **Parameter value**, select **Static(Text)** and enter \`v1\` in the text box using the "composite UI component".
+        1. Set the **Name** to \`path_segment_2\`.
+        2. For the **Parameter value**, select **Static(Text)** and enter \`v1\` in the text box using the "composite UI component".
+        3. Choose **encoding** as **None**.
 
-      - **Parameter #3 (Static Segment \`Books\`)**
+      - **Parameter #3 (Static Parameter \`Books\`)**
 
-        1.  Set the **Name** to \`path_segment_3\`.
-        2.  For the **Parameter value**, select **Static(Text)** and enter \`Books\` in the text box using the "composite UI component".
+        1. Set the **Name** to \`path_segment_3\`.
+        2. For the **Parameter value**, select **Static(Text)** and enter \`Books\` in the text box using the "composite UI component".
+        3. Choose **encoding** as **None**.
 
-      - **Parameter \#4 (Variable Segment \`id\`)**
+      - **Parameter \#4 (Variable Parameter \`id\`)**
 
-        1.  Set the **Name** to \`id\` (to match the OpenAPI parameter).
-        2.  For the **Parameter value**, click the dropdown trigger, select **Source from Variable**, and enter \`id\` in the text box using the "composite UI component". This must be a case-sensitive match to the input parameter defined in Step 1 where we defined an Input Parameter
+        1. Set the **Name** to \`id\` (to match the OpenAPI parameter).
+        2. For the **Parameter value**, click the dropdown trigger, select **Source from Variable**, and enter \`id\` in the text box using the "composite UI component". This must be a case-sensitive match to the input parameter defined in Step 1 where we defined an Input Parameter
+        3. Choose **encoding** as **None**.
 
 7. **Finalize**
       - After configuring all four path parameters, click the **Save** or **Create** button to complete the setup.

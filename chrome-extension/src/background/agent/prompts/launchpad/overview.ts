@@ -23,6 +23,16 @@ export const launchpadOverview = `
             - You may see a "Library" dropdown. Select the appropriate existing library.
             - Avoid creating a new library unless explicitly instructed.
 
+- Create new rule pop-up dialog:
+    - When you provide details for a new rule instance, a "Create Rule" dialog will typically appear.
+    - We need to provide some initial details in the "Create Rule" dialog, for example:
+        - Name: Provide a unique name for the rule instance.
+        - Description: Provide a brief description of the rule instance's purpose or functionality.
+        - Library: Optionally, a Library may appear through a **Picker Drop down menus**. 
+            - Select an existing library from the dropdown. 
+            - Avoid creating a new library unless explicitly instructed.
+        - Once you click submit, you will be taken to the rule instance's main configuration page where you provide further rule type specific details.
+
 - Creating a new rule instance as part of an ongoing flow:
     - When you are in a flow for example creating or updating a rule and need to create a new rule instance as part of **Picker Drop down menus**, follow these steps:
         1. Follow navingation steps of a "Picker Drop down menus" to click the "Create New" link at the bottom of the dropdown list.
