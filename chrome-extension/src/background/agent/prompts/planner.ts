@@ -22,14 +22,7 @@ export class PlannerPrompt extends BasePrompt {
     let prompt = plannerSystemPromptTemplate;
 
     if (isLaunchpad) {
-      if (!context.launchpadKnowledgeActivated) {
-        void context.emitEvent(
-          Actors.SYSTEM,
-          ExecutionState.INFO,
-          'Launchpad application detected. Activating domain-specific knowledge for planner.',
-        );
-        context.launchpadKnowledgeActivated = true;
-      }
+      void context.emitEvent(Actors.SYSTEM, ExecutionState.INFO, 'Including Launchpad domain-specific knowledge.');
       const appSpecificKnowledge = `
 # Application Specific Knowledge
 

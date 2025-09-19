@@ -28,14 +28,7 @@ export class NavigatorPrompt extends BasePrompt {
     let prompt = navigatorSystemPromptTemplate;
 
     if (isLaunchpad) {
-      if (!context.launchpadKnowledgeActivated) {
-        void context.emitEvent(
-          Actors.SYSTEM,
-          ExecutionState.INFO,
-          'Launchpad application detected. Activating UI-specific knowledge for navigator.',
-        );
-        context.launchpadKnowledgeActivated = true;
-      }
+      void context.emitEvent(Actors.SYSTEM, ExecutionState.INFO, 'Including Launchpad domain-specific knowledge.');
       const appSpecificKnowledge = `
 # Application Specific UI Knowledge
 
