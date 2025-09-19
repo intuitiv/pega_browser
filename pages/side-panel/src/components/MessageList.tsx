@@ -28,6 +28,17 @@ interface MessageBlockProps {
   isDarkMode?: boolean;
 }
 
+function getActorDisplayName(actor: string, inProgress: boolean) {
+  switch (actor) {
+    case 'Planner':
+      return inProgress ? 'Planning' : 'Architect';
+    case 'Navigator':
+      return inProgress ? 'Executing' : 'Developer';
+    default:
+      return actor || 'Unknown';
+  }
+}
+
 function MessageBlock({ message, isSameActor, isDarkMode = false }: MessageBlockProps) {
   if (!message.actor) {
     console.error('No actor found');
@@ -55,7 +66,7 @@ function MessageBlock({ message, isSameActor, isDarkMode = false }: MessageBlock
       <div className="min-w-0 flex-1">
         {!isSameActor && (
           <div className={`mb-1 text-sm font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-900'}`}>
-            {actor.name}
+            {getActorDisplayName(actor.name, isProgress)}
           </div>
         )}
 
@@ -66,7 +77,7 @@ function MessageBlock({ message, isSameActor, isDarkMode = false }: MessageBlock
                 <div className="h-full animate-progress bg-blue-500" />
               </div>
             ) : (
-              message.content
+              message.content.split('|').map((msg, idx) => <div key={idx}>{msg}</div>)
             )}
           </div>
           {!isProgress && (

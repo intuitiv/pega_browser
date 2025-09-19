@@ -17,7 +17,7 @@ interface ChatInputProps {
   historicalSessionId?: string | null;
   onReplay?: (sessionId: string) => void;
   mode: 'architect' | 'dev';
-  setMode: (mode: 'architect' | 'dev') => void;
+  onModeChange: (mode: 'architect' | 'dev') => void;
 }
 
 export default function ChatInput({
@@ -33,7 +33,7 @@ export default function ChatInput({
   historicalSessionId,
   onReplay,
   mode,
-  setMode,
+  onModeChange,
 }: ChatInputProps) {
   const [text, setText] = useState('');
   const isSendButtonDisabled = useMemo(() => disabled || text.trim() === '', [disabled, text]);
@@ -167,7 +167,7 @@ export default function ChatInput({
                     ? 'bg-sky-500 text-white'
                     : 'text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                 }`}
-                onClick={() => setMode('architect')}>
+                onClick={() => onModeChange('architect')}>
                 Plan
               </button>
               <button
@@ -177,7 +177,7 @@ export default function ChatInput({
                     ? 'bg-orange-500 text-white'
                     : 'text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                 }`}
-                onClick={() => setMode('dev')}>
+                onClick={() => onModeChange('dev')}>
                 Act
               </button>
             </div>

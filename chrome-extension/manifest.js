@@ -39,7 +39,7 @@ function withOperaSidebar(manifest) {
   return deepmerge(manifest, {
     sidebar_action: {
       default_panel: 'side-panel/index.html',
-      default_title: 'Nanobrowser',
+      default_title: 'Pega browser',
       default_icon: 'icon-32.png',
     },
   });
@@ -57,9 +57,9 @@ const manifest = withOperaSidebar(
      * if you want to support multiple languages, you can use the following reference
      * https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Internationalization
      */
-    name: '__MSG_app_metadata_name__',
+    name: 'Pega Browser',
     version: packageJson.version,
-    description: '__MSG_app_metadata_description__',
+    description: 'Pega Browser: AI web agent',
     host_permissions: ['<all_urls>'],
     permissions: ['storage', 'scripting', 'tabs', 'activeTab', 'debugger', 'unlimitedStorage', 'webNavigation'],
     options_page: 'options/index.html',

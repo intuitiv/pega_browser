@@ -93,7 +93,7 @@ chrome.runtime.onConnect.addListener(port => {
             currentExecutor = await setupExecutor(message.taskId, message.task, browserContext);
             subscribeToExecutorEvents(currentExecutor);
 
-            const result = await currentExecutor.execute(message.mode);
+            const result = await currentExecutor.execute(message.actor);
             logger.info('new_task execution result', message.tabId, result);
             break;
           }
@@ -106,10 +106,10 @@ chrome.runtime.onConnect.addListener(port => {
 
             // If executor exists, add follow-up task
             if (currentExecutor) {
-              currentExecutor.addFollowUpTask(message.task);
+              currentExecutor.addFollowUpTask(message.task, message.actor);
               // Re-subscribe to events in case the previous subscription was cleaned up
               subscribeToExecutorEvents(currentExecutor);
-              const result = await currentExecutor.execute(message.mode);
+              const result = await currentExecutor.execute(message.actor);
               logger.info('follow_up_task execution result', message.tabId, result);
             } else {
               // executor was cleaned up, can not add follow-up task

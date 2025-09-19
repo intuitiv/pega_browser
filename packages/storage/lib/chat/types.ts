@@ -10,6 +10,7 @@ export interface Message {
   actor: Actors;
   content: string;
   timestamp: number; // Unix timestamp in milliseconds
+  proccessedByNavigator?: boolean; // Whether this message has been processed by the navigator agent
 }
 
 export interface ChatMessage extends Message {

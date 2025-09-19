@@ -23,13 +23,17 @@ import {
   RequestCancelledError,
 } from './errors';
 import { calcBranchPathHashSet } from '@src/background/browser/dom/views';
-import { type BrowserState, BrowserStateHistory, URLNotAllowedError } from '@src/background/browser/views';
+import { type BrowserState, BrowserStateHistory, TabInfo, URLNotAllowedError } from '@src/background/browser/views';
 import { convertZodToJsonSchema, repairJsonString } from '@src/background/utils';
 import { HistoryTreeProcessor } from '@src/background/browser/dom/history/service';
 import { AgentStepRecord } from '../history';
 import { type DOMHistoryElement } from '@src/background/browser/dom/history/view';
 
 const logger = createLogger('NavigatorAgent');
+
+const currentTabContextMap: { [key: string]: BaseMessage } = {
+  overview: new HumanMessage(`The user is currently on the Overview page of the app. `),
+};
 
 interface ParsedModelOutput {
   current_state?: {
@@ -88,6 +92,20 @@ export class NavigatorAgent extends BaseAgent<z.ZodType, NavigatorResult> {
 
     // The zod object is too complex to be used directly, so we need to convert it to json schema first for the model to use
     this.jsonSchema = convertZodToJsonSchema(this.modelOutputSchema, 'NavigatorAgentOutput', true);
+  }
+
+  async injectCurrentTabContext(currentTab: TabInfo): Promise<any> {
+    const currentTabURL = currentTab.url;
+    console.log('Current tab URL:', currentTabURL);
+    if (currentTab.title === 'Launchpad' && currentTabURL?.includes('c11n/appauthoring/')) {
+      const match = currentTabURL.match(/branches\/[^/]+\/([^/?]+)/);
+      const tabKey = match ? match[1] : '';
+      const tabInfo = currentTabContextMap[tabKey] ?? null;
+      if (tabInfo) {
+        this.context.messageManager.addMessageWithTokens(tabInfo);
+      }
+    }
+    return null;
   }
 
   async invoke(inputMessages: BaseMessage[]): Promise<this['ModelOutput']> {
@@ -161,6 +179,12 @@ export class NavigatorAgent extends BaseAgent<z.ZodType, NavigatorResult> {
       await this.addStateMessageToMemory();
       const currentState = await this.context.browserContext.getCachedState();
       browserStateHistory = new BrowserStateHistory(currentState);
+
+      let currentWindow = currentState.tabs.find(tab => tab.id === currentState.tabId);
+      if (currentWindow) {
+        console.log('Current tab URL:', currentWindow.url);
+        await this.injectCurrentTabContext(currentWindow);
+      }
 
       // check if the task is paused or stopped
       if (this.context.paused || this.context.stopped) {

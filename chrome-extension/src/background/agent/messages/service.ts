@@ -157,12 +157,24 @@ export default class MessageManager {
    * Adds a new task to execute, it will be executed based on the history
    * @param newTask - The raw description of the new task
    */
-  public addNewTask(newTask: string): void {
+  public addNewTask(newTask: string, actor: string): void {
     const cleanedTask = filterExternalContent(newTask);
-    const content = `Your new ultimate task is: """${cleanedTask}""". This is a follow-up of the previous tasks. Make sure to take all of the previous context into account and finish your new ultimate task.`;
+    const content = actor === 'planner' ? this.addPlannerTask(cleanedTask) : this.addNavigatorTask(cleanedTask);
     const wrappedContent = wrapUserRequest(content, false);
     const msg = new HumanMessage({ content: wrappedContent });
     this.addMessageWithTokens(msg);
+  }
+
+  /**
+   * Adds a new task to execute, it will be executed based on the history
+   * @param newTask - The raw description of the new task
+   */
+  private addPlannerTask(cleanedTask: string): string {
+    return `Your new ultimate task is: """${cleanedTask}""". This is a follow-up of the previous tasks. Make sure to take all of the previous context into account and plan your new ultimate task.`;
+  }
+
+  private addNavigatorTask(cleanedTask: string): string {
+    return `Your new ultimate task is to follow the given plan: """${cleanedTask}""". Break the plan into actionable steps and execute them one by one. `;
   }
 
   /**

@@ -35,7 +35,6 @@ const SidePanel = () => {
   const [isFollowUpMode, setIsFollowUpMode] = useState(false);
   const [isHistoricalSession, setIsHistoricalSession] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [favoritePrompts, setFavoritePrompts] = useState<FavoritePrompt[]>([]);
   const [hasConfiguredModels, setHasConfiguredModels] = useState<boolean | null>(null); // null = loading, false = no models, true = has models
   const [isRecording, setIsRecording] = useState(false);
   const [isProcessingSpeech, setIsProcessingSpeech] = useState(false);
@@ -587,9 +586,10 @@ const SidePanel = () => {
     }
   };
 
-  const handleSendMessage = async (text: string) => {
+  const handleSendMessage = async (text: string, actMode?: string) => {
     console.log('handleSendMessage', text);
 
+    const updatedMode = actMode ? actMode : mode;
     // Trim the input text first
     const trimmedText = text.trim();
 
@@ -632,14 +632,23 @@ const SidePanel = () => {
         sessionIdRef.current = sessionId;
       }
 
-      const userMessage = {
-        actor: Actors.USER,
-        content: text,
-        timestamp: Date.now(),
-      };
+      if (actMode === 'dev') {
+        const message = {
+          actor: Actors.NAVIGATOR,
+          content: `Executing the above plan`,
+          timestamp: Date.now(),
+        };
+        appendMessage(message, sessionIdRef.current);
+      } else {
+        const userMessage = {
+          actor: Actors.USER,
+          content: text,
+          timestamp: Date.now(),
+        };
 
-      // Pass the sessionId directly to appendMessage
-      appendMessage(userMessage, sessionIdRef.current);
+        // Pass the sessionId directly to appendMessage
+        appendMessage(userMessage, sessionIdRef.current);
+      }
 
       // Setup connection if not exists
       if (!portRef.current) {
@@ -654,7 +663,7 @@ const SidePanel = () => {
           task: text,
           taskId: sessionIdRef.current,
           tabId,
-          mode,
+          actor: updatedMode === 'architect' ? Actors.PLANNER : Actors.NAVIGATOR,
         });
         console.log('follow_up_task sent', text, tabId, sessionIdRef.current);
       } else {
@@ -664,7 +673,7 @@ const SidePanel = () => {
           task: text,
           taskId: sessionIdRef.current,
           tabId,
-          mode,
+          actor: updatedMode === 'architect' ? Actors.PLANNER : Actors.NAVIGATOR,
         });
         console.log('new_task sent', text, tabId, sessionIdRef.current);
       }
@@ -1149,7 +1158,26 @@ const SidePanel = () => {
                     historicalSessionId={isHistoricalSession && replayEnabled ? currentSessionId : null}
                     onReplay={handleReplay}
                     mode={mode}
-                    setMode={setMode}
+                    onModeChange={(newMode: 'architect' | 'dev') => {
+                      setMode(newMode);
+                      if (newMode === 'dev') {
+                        const plannerMessages = messages.filter(
+                          msg => msg.actor === Actors.PLANNER && msg.content !== progressMessage,
+                        );
+                        if (
+                          plannerMessages.length > 0 &&
+                          plannerMessages[plannerMessages.length - 1].proccessedByNavigator !== true
+                        ) {
+                          const plannerMessage = plannerMessages[plannerMessages.length - 1];
+                          setMessages(prevMessages =>
+                            prevMessages.map(msg =>
+                              msg === plannerMessage ? { ...msg, proccessedByNavigator: true } : msg,
+                            ),
+                          );
+                          handleSendMessage(plannerMessage.content, newMode);
+                        }
+                      }
+                    }}
                   />
                 </div>
               </>
