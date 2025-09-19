@@ -13,7 +13,7 @@ window.buildDomTree = (
   const { showHighlightElements, focusHighlightIndex, viewportExpansion, startHighlightIndex, startId, debugMode } =
     args;
   // Make sure to do highlight elements always, but we can hide the highlights if needed
-  const doHighlightElements = showHighlightElements;
+  const doHighlightElements = false;
 
   let highlightIndex = startHighlightIndex; // Reset highlight index
 
