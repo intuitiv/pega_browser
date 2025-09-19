@@ -1,31 +1,6 @@
 export const launchpadUiKnowledge = `
 
-# Typical User Interface Elements in Launchpad:
-
-- Navigation steps to Open or create a Rule Instance of a particular type:
-	1. In the main navigation pane on left hand side, locate and click the "Rules Library" link.
-	2. In the list of rule categories, locate and expand the relevant node based on following mapping (RuleType-to-Category):
-		- Integration Systems: "Integration"
-		- Rest Connectors: "Integration"
-		- Data Pages: "Data"
-		- Data Connections: "Data"
-		- Fields: "Data"
-	3. Within the expanded node, locate and click the appropriate rule type link.
-	4. You will get a list of rules of that type. 
-	5. To Open an existing rule, locate the rule by name and click on the hyperlink in the "Name" column of the table.
-	6. To create a new rule, click the "Create" button typically located at the top right corner of the page.
-	7. In the "Create Rule" dialog that appears, provide appropriate rule type specific values:
-		- You may see a "Library" dropdown. Select the appropriate library (e.g., "My Company").
-
-- Procedure for adding an Input Parameter to a rule using Parameters tab:
-	1.	Navigate: Ensure you are in the "Parameters" tab.
-	2.	Initiate Add: Locate and click the "Add" link or button. A new, empty row will be added to the input parameters table.
-	3.	Populate Text Fields: In the newly created row, perform the following:
-		•	In the "Name" column, enter: [Parameter Name]
-		•	In the "Description" column, enter: [Parameter Description]
-	4.	Select from Type Selector Dropdown:
-		•	In the "Type" column, click the chevron dropdown icon on the right side of the dropdown menu to reveal the list of available types.
-		•	Select the option from the list that exactly matches required Type.
+### Typical User Interface Elements in Launchpad:
 
 - Instruction for handling **Picker Drop down menus** in Launchpad UI:
     1. To select an item from a picker dropdown list, first click on the dropdown arrow or chevron icon on the right-most section of the dropdown element. 
@@ -51,7 +26,6 @@ export const launchpadUiKnowledge = `
 	6. Select "Source from Variable" if you want to reference a variable whose value will typically be sourced from "Input parameters" section of "Parameters" tab of the rule.
 	7. Make sure if you select "Source from Variable", the variable name you enter in the text box matches exactly (case-sensitive) with one of the defined input parameters.
 		8. Revisit the procedure for adding an Input Parameter to a rule above if you need to define a new input parameter.
-
 
 # Error Handling:
 

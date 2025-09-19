@@ -185,6 +185,9 @@ const SidePanel = () => {
               break;
             case ExecutionState.TASK_RESUME:
               break;
+            case ExecutionState.INFO:
+              skip = false;
+              break;
             default:
               console.error('Invalid task state', state);
               return;

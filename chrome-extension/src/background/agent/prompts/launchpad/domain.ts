@@ -1,10 +1,8 @@
 export const launchpadDomainKnowledge = `
 
-
-
 ### **Library**
 
-In Launchpad, a **library** is a logical grouping of rules that defines the scope for various components in your application. When creating a new rule, you will see a "Library" dropdown. You should select the appropriate library (e.g., "My Company") and should not typically create a new one unless specifically instructed.
+In Launchpad, a **library** is a logical grouping of rules that defines the scope for various components in your application. When creating a new rule, you will see a "Library" dropdown. You should select the appropriate library and should not typically create a new one unless specifically instructed.
 
 ### **Integration Systems**
 
@@ -66,12 +64,14 @@ Let us create a REST Connector for a \`PUT\` endpoint with a path parameter, bas
 To create or update the connector for the \`PUT /api/v1/Books/{id}\` endpoint, follow these steps:
 
 1. To create a new REST Connector, follow the navigation steps to create a new rule of type **Rest Connector**.
-    1. Provide appropriate values e.g. Name, Description and select the correct **Library** (e.g., "My Company") using the picker dropdown.
+    1. Provide appropriate values e.g. Name, Description and select an appropriate **Library**  using the picker dropdown.
+    2. If you are unsure which Library to select, choose the first option in the list.
 
 2. To open and edit an existing REST Connector, follow the navigation steps to open a rule of type **Rest Connector**.
 
 3. Select or Create an **Integration System** based on your requirements using the picker dropdown in the **Service** tab.
     1. In this example, we can create a new Integration System named \`BooksAPISystem\` with the Base URL set to \`https://example.com\` and select appropriate authentication like oauth.
+    2. Since this rule creation will open a new tab, recall instructions to create a new rule instance as part of an ongoing flow.
 
 4. **Define Input Parameter** using Parameter tab
     1.  Navigate to the **Parameters** tab.

@@ -2,6 +2,7 @@
 import { BasePrompt } from './base';
 import { type HumanMessage, SystemMessage } from '@langchain/core/messages';
 import type { AgentContext } from '@src/background/agent/types';
+import { Actors, ExecutionState } from '../event/types';
 import { createLogger } from '@src/background/log';
 import { navigatorSystemPromptTemplate } from './templates/navigator';
 import { launchpadUiKnowledge } from './launchpad/ui';
@@ -21,10 +22,15 @@ export class NavigatorPrompt extends BasePrompt {
     let prompt = navigatorSystemPromptTemplate;
 
     if (isLaunchpad) {
+      void context.emitEvent(
+        Actors.SYSTEM,
+        ExecutionState.INFO,
+        'Launchpad application detected. Activating UI-specific knowledge for navigator.',
+      );
       const appSpecificKnowledge = `
 # Application Specific UI Knowledge
 
-The current site has been identified as the "Launchpad" application. Use the UI knowledge to better understand the interface and available actions.
+The current application or website that we are working on has been identified as the "Launchpad" application. Use the UI knowledge to better understand the interface and available actions.
 
 ## Application Overview
 ${launchpadOverview}
