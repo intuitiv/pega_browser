@@ -10,6 +10,7 @@ import { t } from '@extension/i18n';
 import MessageList from './components/MessageList';
 import ChatInput from './components/ChatInput';
 import ChatHistoryList from './components/ChatHistoryList';
+import { StarterQuestions } from './components/StarterQuestions';
 import { EventType, type AgentEvent, ExecutionState } from './types/event';
 import './SidePanel.css';
 
@@ -1020,9 +1021,7 @@ const SidePanel = () => {
                 aria-label={t('nav_back_a11y')}>
                 {t('nav_back')}
               </button>
-            ) : (
-              <img src="/icon-128.png" alt="Extension Logo" className="size-6" />
-            )}
+            ) : null}
           </div>
           <div className="header-icons">
             {!showHistory && (
@@ -1047,13 +1046,6 @@ const SidePanel = () => {
                 </button>
               </>
             )}
-            <a
-              href="https://discord.gg/NN3ABHggMK"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`header-icon ${isDarkMode ? 'text-sky-400 hover:text-sky-300' : 'text-sky-400 hover:text-sky-500'}`}>
-              <RxDiscordLogo size={20} />
-            </a>
             <button
               type="button"
               onClick={() => chrome.runtime.openOptionsPage()}
@@ -1132,7 +1124,18 @@ const SidePanel = () => {
               <>
                 <div
                   className={`flex-1 overflow-y-auto ${messages.length > 0 ? 'scrollbar-gutter-stable' : ''} p-2 ${isDarkMode ? 'bg-slate-900/80' : ''}`}>
-                  {messages.length > 0 && <MessageList messages={messages} isDarkMode={isDarkMode} />}
+                  {messages.length > 0 ? (
+                    <MessageList messages={messages} isDarkMode={isDarkMode} />
+                  ) : (
+                    <StarterQuestions
+                      onQuestionClick={question => {
+                        if (setInputTextRef.current) {
+                          setInputTextRef.current(question);
+                        }
+                      }}
+                      isDarkMode={isDarkMode}
+                    />
+                  )}
                   <div ref={messagesEndRef} />
                 </div>
                 <div
