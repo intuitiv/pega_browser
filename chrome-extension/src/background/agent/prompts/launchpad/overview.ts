@@ -38,7 +38,7 @@ export const launchpadOverview = `
 
 - Creating a new rule instance as part of an ongoing flow:
     - When you are in a flow for example creating or updating a rule and need to create a new rule instance as part of **Picker Drop down menus**, follow these steps:
-        1. Follow navingation steps of a "Picker Drop down menus" to click the "Create New" link at the bottom of the dropdown list.
+        1. Follow navigation steps of a "Picker Drop down menus" to click the "Create New" link at the bottom of the dropdown list.
         2. A new Tab would open to create a new instance of that rule type. Take note of current tab so you can return to it later.
         3. Create the new rule instance by providing appropriate values in the new tab. Note the name of the rule instance you are creating.
         4. After saving the new rule instance, return to the original tab where you were working on the flow.
