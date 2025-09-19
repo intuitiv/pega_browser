@@ -75,7 +75,8 @@ To create or update the connector for the \`PUT /api/v1/Books/{id}\` endpoint, f
     2. Navigate to the **Parameters** tab.
     3. Add a new input parameter.
     4. Set its **Name** to \`id\`.
-    5. Based on the schema (\`type: "integer"\`), set its **Type** to **Integer** using the "Type Selector" dropdown
+    5. Set the description appropriately.
+    6. Choose type as "Text" using the "Type Selector" dropdown.
 
 5.  **Configure HTTP method**
     1.  Navigate back to the **Service** tab.

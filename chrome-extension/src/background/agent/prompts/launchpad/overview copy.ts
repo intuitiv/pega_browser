@@ -62,6 +62,44 @@ export const launchpadOverview = `
             - Provide an appropriate description in the "Description" text box.
             - In the "Type" dropdown, click the chevron dropdown icon on the right side of the dropdown menu to reveal the list of available types.
             - Select the option from the list that exactly matches required Type. For example, "Text", "Integer" etc.
-            
+
+
+- Adding a new field in the **Case Type** using Data Model tab with Expression calculation to call a Data Connection:
+    - Steps to add a new field with Expression calculation in Case Designer using Data Model tab:
+        - Navigate to required Case Type.
+            1. In the main navigation pane on left hand side, locate and click the "Cases" link.
+            2. In the list of Case Types, locate and click the Case Type you are working with (e.g. "Service Request").
+            3. In the Case Type configuration page, click the "Data Model" tab.
+        - Adding a new field from Data Model tab:
+            1. Once the Case Type configuration page opens, click on the "Data Model" tab.
+            2. Click on the "Add" button to add a new field.
+        - Configuring the new field with Expression calculation:
+            1. Add basic details for the new field:
+                - In the "Add Field" dialog that appears, provide the following details:
+                    - Name: Provide a unique name for the field.
+                    - Description: Provide a brief description of the field's purpose or functionality.
+                    - Type: Select the Field Type as "Text" from the dropdown.
+                - Configure calculation:
+                    - After selecting "Text" as the type, locate and select the checkbox labeled "This is a calculated field (read-only)".
+                    - Select the "Calculated" checkbox. This will reveal the "Calculation" **composite UI component or Input Group**
+                    - Calculation component details:
+                        - The component will contain a dropdown trigger button and a text input box. 
+                        - The dropdown trigger button is typically on the left side of the input box and opens a menu to select the input's source type. 
+                        - The text input box is where the actual value is entered.
+                    - Configuring the Calculation component:
+                        - Click the dropdown trigger button and select the "Expression" option from the list.
+                        - After selecting "Expression", the text input box will become active for input.
+                        - Click on the maginifying glass icon on the right side of the input box to open the expression builder pop-up.
+                        - In the expression builder pop-up:
+                            - Focus on the "Expression" text area labelled "Expression" with an asterisk (*) on the right side of the pop-up
+                            - Enter the expression to invoke the Data Connection in the following format: Servicerequest@DataConnection:<DataConnectionName>()
+                            - Replace <DataConnectionName> with the actual name of the Data Connection you want to invoke. For example, if the Data Connection is named "RetrieveStockInfo", the expression would be Servicerequest@DataConnection:RetrieveStockInfo()
+                        - Click the "Submit" button to save the expression and close the pop-up.
+                        - We will return to the "Add Field" dialog where the expression will now be populated in the Calculation input box.
+                        - Now click the "Submit" button to save the new field configuration.
+            3. Save the new field configuration:
+                - Click the Submit button to save the new field configuration.
+                - Finally, click the "Save" button on the Case Type configuration page to apply all changes to your Data Model.
+
 
 `;
