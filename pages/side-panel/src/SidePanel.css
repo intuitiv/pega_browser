@@ -1,6 +1,6 @@
 /* Add this at the top of the file */
 body {
-    border-color: #d91c29 !important; /* Pega's urgent color for emphasis */
+    border-color:  #5A65C2 !important; /* Pega's urgent color for emphasis */
 }
 
 /* Remove unused classes: .App, .App-logo, .App-header */
@@ -9,7 +9,7 @@ code {
     background: rgba(7, 107, 201, 0.1); /* Lighter shade of Pega's primary brand color */
     border-radius: 0.25rem;
     padding: 0.2rem 0.5rem;
-    color: #076bc9; /* Pega's primary brand color */
+    color:  #5A65C2 /* Pega's primary brand color */
 }
 
 /* Dark mode support for code */
@@ -60,7 +60,7 @@ code {
     align-items: center;
     padding: 0.75rem;
     background-color: transparent;
-    border-bottom: 1px solid rgba(7, 107, 201, 0.2); /* Using brand color for border */
+    border-bottom: 1px solid  #5A65C2
 }
 
 /* Dark mode header border */
@@ -82,26 +82,26 @@ code {
 }
 
 .header-icon {
-    color: #076bc9; /* Pega's interactive color */
+    color: #5A65C2; /* Pega's interactive color */
     cursor: pointer;
     transition: color 0.2s ease;
     opacity: 0.9;
 }
 
 .header-icon:hover {
-    color: #054a8b;
+    color:  #5A65C2;
     opacity: 1;
 }
 
 .send-button {
-    color: #076bc9; /* Pega's interactive color */
+    color: #5A65C2; /* Pega's interactive color */
     cursor: pointer;
     transition: color 0.2s ease;
     opacity: 0.9;
 }
 
 .send-button:hover {
-    color: #054a8b;
+    color:  #5A65C2;
     opacity: 1;
 }
 
