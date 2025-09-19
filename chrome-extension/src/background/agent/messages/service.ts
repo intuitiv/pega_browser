@@ -345,7 +345,7 @@ export default class MessageManager {
    * @returns The number of tokens in the text
    */
   private _countTextTokens(text: string): number {
-    return Math.floor(text.length / this.settings.estimatedCharactersPerToken);
+    return Math.floor(text?.length || 0 / this.settings.estimatedCharactersPerToken);
   }
 
   /**

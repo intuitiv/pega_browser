@@ -56,7 +56,7 @@ export class PlannerAgent extends BaseAgent<typeof plannerOutputSchema, PlannerO
       // get all messages from the message manager, state message should be the last one
       const messages = this.context.messageManager.getMessages();
       // Use full message history except the first one
-      const plannerMessages = [this.prompt.getSystemMessage(), ...messages.slice(1)];
+      const plannerMessages = [await this.prompt.getSystemMessage(this.context), ...messages.slice(1)];
 
       // Remove images from last message if vision is not enabled for planner but vision is enabled
       if (!this.context.options.useVisionForPlanner && this.context.options.useVision) {

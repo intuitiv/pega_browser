@@ -321,7 +321,7 @@ async function setupExecutor(taskId: string, task: string, browserContext: Brows
     },
     generalSettings: generalSettings,
   });
-
+  await executor.initMessages(task);
   return executor;
 }
 

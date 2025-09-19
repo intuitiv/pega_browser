@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, act } from 'react';
 import { RxDiscordLogo } from 'react-icons/rx';
 import { FiSettings } from 'react-icons/fi';
 import { PiPlusBold } from 'react-icons/pi';
@@ -622,7 +622,7 @@ const SidePanel = () => {
       setShowStopButton(true);
 
       // Create a new chat session for this task if not in follow-up mode
-      if (!isFollowUpMode) {
+      if (!isFollowUpMode || (actMode === 'dev' && !sessionIdRef.current)) {
         const newSession = await chatHistoryStore.createSession(
           text.substring(0, 50) + (text.length > 50 ? '...' : ''),
           tabId,
@@ -637,8 +637,8 @@ const SidePanel = () => {
 
       if (actMode === 'dev') {
         const message = {
-          actor: Actors.NAVIGATOR,
-          content: `Executing the above plan`,
+          actor: Actors.SYSTEM,
+          content: `Execute the below plan: \n ${text}`,
           timestamp: Date.now(),
         };
         appendMessage(message, sessionIdRef.current);
@@ -648,7 +648,6 @@ const SidePanel = () => {
           content: text,
           timestamp: Date.now(),
         };
-
         // Pass the sessionId directly to appendMessage
         appendMessage(userMessage, sessionIdRef.current);
       }
@@ -659,7 +658,7 @@ const SidePanel = () => {
       }
 
       // Send message using the utility function
-      if (isFollowUpMode) {
+      if (isFollowUpMode && actMode !== 'dev') {
         // Send as follow-up task
         await sendMessage({
           type: 'follow_up_task',
@@ -1163,21 +1162,14 @@ const SidePanel = () => {
                     mode={mode}
                     onModeChange={(newMode: 'architect' | 'dev') => {
                       setMode(newMode);
+                      handleNewChat();
                       if (newMode === 'dev') {
                         const plannerMessages = messages.filter(
                           msg => msg.actor === Actors.PLANNER && msg.content !== progressMessage,
                         );
-                        if (
-                          plannerMessages.length > 0 &&
-                          plannerMessages[plannerMessages.length - 1].proccessedByNavigator !== true
-                        ) {
+                        if (plannerMessages.length > 0) {
                           const plannerMessage = plannerMessages[plannerMessages.length - 1];
-                          setMessages(prevMessages =>
-                            prevMessages.map(msg =>
-                              msg === plannerMessage ? { ...msg, proccessedByNavigator: true } : msg,
-                            ),
-                          );
-                          handleSendMessage(plannerMessage.content, newMode);
+                          handleSendMessage(plannerMessage.content, 'dev');
                         }
                       }
                     }}
