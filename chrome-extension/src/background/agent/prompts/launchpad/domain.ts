@@ -105,7 +105,7 @@ To create or update the connector for the \`PUT /api/v1/Books/{id}\` endpoint, f
       - **Parameter \#4 (Variable Parameter \`id\`)**
 
         1. Set the **Name** to \`id\` (to match the OpenAPI parameter).
-        2. For the **Parameter value**, click the dropdown trigger, select **Source from Variable**, and enter \`id\` in the text box using the "composite UI component". This must be a case-sensitive match to the input parameter defined in Step 1 where we defined an Input Parameter
+        2. For the **Parameter value**, click the dropdown trigger, select **Source from Variable**, and select \`id\` from the drop down using the "composite UI component". This will reference the input parameter, \'id\' we defined earlier.
         3. Choose **encoding** as **None**.
 
 7. **Finalize**

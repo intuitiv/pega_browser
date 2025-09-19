@@ -24,8 +24,8 @@ export const launchpadUiKnowledge = `
 	4. You must first click the trigger and select the correct source type before typing in the value.
 	5. Select "Static(Text)" if you want to enter a fixed text value.
 	6. Select "Source from Variable" if you want to reference a variable whose value will typically be sourced from "Input parameters" section of "Parameters" tab of the rule.
-	7. Make sure if you select "Source from Variable", the variable name you enter in the text box matches exactly (case-sensitive) with one of the defined input parameters.
-		8. Revisit the procedure for adding an Input Parameter to a rule above if you need to define a new input parameter.
+		1. If you select "Source from Variable", you will need to further select an input variable from the drop down with one of the defined input parameters.
+	7. Revisit the procedure for adding an Input Parameter to a rule above if you need to define a new input parameter.
 
 # Error Handling:
 
