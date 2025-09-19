@@ -12,7 +12,7 @@ abstract class BasePrompt {
    * Returns the system message that defines the AI's role and behavior
    * @returns SystemMessage from LangChain
    */
-  abstract getSystemMessage(): SystemMessage;
+  abstract getSystemMessage(context: AgentContext): Promise<SystemMessage>;
 
   /**
    * Returns the user message for the specific prompt type

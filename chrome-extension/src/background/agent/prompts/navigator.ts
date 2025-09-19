@@ -2,30 +2,47 @@
 import { BasePrompt } from './base';
 import { type HumanMessage, SystemMessage } from '@langchain/core/messages';
 import type { AgentContext } from '@src/background/agent/types';
+import { Actors, ExecutionState } from '../event/types';
 import { createLogger } from '@src/background/log';
 import { navigatorSystemPromptTemplate } from './templates/navigator';
+import { launchpadUiKnowledge } from './launchpad/ui';
+import { launchpadOverview } from './launchpad/overview';
 
 const logger = createLogger('agent/prompts/navigator');
 
 export class NavigatorPrompt extends BasePrompt {
-  private systemMessage: SystemMessage;
-
   constructor(private readonly maxActionsPerStep = 10) {
     super();
-
-    const promptTemplate = navigatorSystemPromptTemplate;
-    // Format the template with the maxActionsPerStep
-    const formattedPrompt = promptTemplate.replace('{{max_actions}}', this.maxActionsPerStep.toString()).trim();
-    this.systemMessage = new SystemMessage(formattedPrompt);
   }
 
-  getSystemMessage(): SystemMessage {
-    /**
-     * Get the system prompt for the agent.
-     *
-     * @returns SystemMessage containing the formatted system prompt
-     */
-    return this.systemMessage;
+  async getSystemMessage(context: AgentContext): Promise<SystemMessage> {
+    const state = await context.browserContext.getState();
+    const isLaunchpad = state.url.includes('https://adoption-frontend-us-east-1.cluster.staging.pegaservice.net');
+
+    let prompt = navigatorSystemPromptTemplate;
+
+    if (isLaunchpad) {
+      void context.emitEvent(
+        Actors.SYSTEM,
+        ExecutionState.INFO,
+        'Launchpad application detected. Activating UI-specific knowledge for navigator.',
+      );
+      const appSpecificKnowledge = `
+# Application Specific UI Knowledge
+
+The current application or website that we are working on has been identified as the "Launchpad" application. Use the UI knowledge to better understand the interface and available actions.
+
+## Application Overview
+${launchpadOverview}
+
+## UI Knowledge: Launchpad
+${launchpadUiKnowledge}
+`;
+      prompt += appSpecificKnowledge;
+    }
+
+    const formattedPrompt = prompt.replace('{{max_actions}}', this.maxActionsPerStep.toString()).trim();
+    return new SystemMessage(formattedPrompt);
   }
 
   async getUserMessage(context: AgentContext): Promise<HumanMessage> {

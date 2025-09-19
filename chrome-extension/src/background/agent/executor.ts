@@ -98,9 +98,9 @@ export class Executor {
     this.context.eventManager.clearSubscribers(EventType.EXECUTION);
   }
 
-  addFollowUpTask(task: string, actor: string = 'planner'): void {
+  addFollowUpTask(task: string): void {
     this.tasks.push(task);
-    this.context.messageManager.addNewTask(task, actor);
+    this.context.messageManager.addNewTask(task);
 
     // need to reset previous action results that are not included in memory
     this.context.actionResults = this.context.actionResults.filter(result => result.includeInMemory);
@@ -125,11 +125,12 @@ export class Executor {
    *
    * @returns {Promise<void>}
    */
-  async execute(actor: string): Promise<void> {
+  async execute(): Promise<void> {
     logger.info(`🚀 Executing task: ${this.tasks[this.tasks.length - 1]}`);
     // reset the step counter
     const context = this.context;
     context.nSteps = 0;
+    const allowedMaxSteps = this.context.options.maxSteps;
 
     try {
       this.context.emitEvent(Actors.SYSTEM, ExecutionState.TASK_START, this.context.taskId);
@@ -137,32 +138,38 @@ export class Executor {
       // Track task start
       void analytics.trackTaskStart(this.context.taskId);
 
+      let step = 0;
       let latestPlanOutput: AgentOutput<PlannerOutput> | null = null;
       let navigatorDone = false;
 
-      if (actor === 'navigator') {
+      for (step = 0; step < allowedMaxSteps; step++) {
         context.stepInfo = {
           stepNumber: context.nSteps,
           maxSteps: context.options.maxSteps,
         };
 
-        if (!(await this.shouldStop())) {
-          // Execute navigator
-          navigatorDone = await this.navigate();
+        logger.info(`🔄 Step ${step + 1} / ${allowedMaxSteps}`);
+        if (await this.shouldStop()) {
+          break;
         }
+
+        // Run planner periodically for guidance
+        if (this.planner && (context.nSteps % context.options.planningInterval === 0 || navigatorDone)) {
+          navigatorDone = false;
+          latestPlanOutput = await this.runPlanner();
+
+          // Check if task is complete after planner run
+          if (this.checkTaskCompletion(latestPlanOutput)) {
+            break;
+          }
+        }
+
+        // Execute navigator
+        navigatorDone = await this.navigate();
 
         // If navigator indicates completion, the next periodic planner run will validate it
         if (navigatorDone) {
           logger.info('🔄 Navigator indicates completion - will be validated by next planner run');
-        }
-      } else {
-        latestPlanOutput = await this.runPlanner();
-        if (latestPlanOutput && latestPlanOutput.result) {
-          latestPlanOutput.result.done = true;
-        }
-        // Check if task is complete after planner run
-        if (this.checkTaskCompletion(latestPlanOutput)) {
-          console.log('Task completed as per planner');
         }
       }
 
@@ -176,6 +183,14 @@ export class Executor {
 
         // Track task completion
         void analytics.trackTaskComplete(this.context.taskId);
+      } else if (step >= allowedMaxSteps) {
+        logger.error('❌ Task failed: Max steps reached');
+        this.context.emitEvent(Actors.SYSTEM, ExecutionState.TASK_FAIL, t('exec_errors_maxStepsReached'));
+
+        // Track task failure with specific error category
+        const maxStepsError = new MaxStepsReachedError(t('exec_errors_maxStepsReached'));
+        const errorCategory = analytics.categorizeError(maxStepsError);
+        void analytics.trackTaskFailed(this.context.taskId, errorCategory);
       } else if (this.context.stopped) {
         this.context.emitEvent(Actors.SYSTEM, ExecutionState.TASK_CANCEL, t('exec_task_cancel'));
 

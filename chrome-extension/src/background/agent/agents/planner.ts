@@ -57,7 +57,6 @@ export class PlannerAgent extends BaseAgent<typeof plannerOutputSchema, PlannerO
       const messages = this.context.messageManager.getMessages();
       // Use full message history except the first one
       const plannerMessages = [this.prompt.getSystemMessage(), ...messages.slice(1)];
-      logger.info('Planner input messages', JSON.stringify(plannerMessages, null, 2));
 
       // Remove images from last message if vision is not enabled for planner but vision is enabled
       if (!this.context.options.useVisionForPlanner && this.context.options.useVision) {
@@ -82,7 +81,6 @@ export class PlannerAgent extends BaseAgent<typeof plannerOutputSchema, PlannerO
       if (!modelOutput) {
         throw new Error('Failed to validate planner output');
       }
-      logger.info('Planner model output', JSON.stringify(modelOutput, null, 2));
 
       // clean the model output
       const observation = filterExternalContent(modelOutput.observation);
@@ -103,7 +101,7 @@ export class PlannerAgent extends BaseAgent<typeof plannerOutputSchema, PlannerO
       // If task is done, emit the final answer; otherwise emit next steps
       const eventMessage = cleanedPlan.done ? cleanedPlan.final_answer : cleanedPlan.next_steps;
       this.context.emitEvent(Actors.PLANNER, ExecutionState.STEP_OK, eventMessage);
-      logger.info('Cleaned planner output', JSON.stringify(cleanedPlan, null, 2));
+      logger.info('Planner output', JSON.stringify(cleanedPlan, null, 2));
 
       return {
         id: this.id,
