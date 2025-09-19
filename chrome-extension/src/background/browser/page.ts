@@ -497,6 +497,17 @@ export default class Page {
     return this._state.title;
   }
 
+  async evaluate<
+    PageFunction extends (arg1: any, ...args: any[]) => any,
+    Params extends Parameters<PageFunction>,
+    ReturnValue extends ReturnType<PageFunction>,
+  >(pageFunction: PageFunction | string, ...args: Params): Promise<Awaited<ReturnValue>> {
+    if (!this._puppeteerPage) {
+      throw new Error('Puppeteer page is not connected');
+    }
+    return this._puppeteerPage.evaluate(pageFunction, ...args);
+  }
+
   async navigateTo(url: string): Promise<void> {
     if (!this._puppeteerPage) {
       return;

@@ -6,15 +6,23 @@ import { Actors, ExecutionState } from '../event/types';
 import { plannerSystemPromptTemplate } from './templates/planner';
 import { launchpadDomainKnowledge } from './launchpad/domain';
 import { launchpadOverview } from './launchpad/overview';
+import { logger } from '@src/background/log';
 
 export class PlannerPrompt extends BasePrompt {
   async getSystemMessage(context: AgentContext): Promise<SystemMessage> {
-    const state = await context.browserContext.getState();
-    const isLaunchpad = state.url.includes('https://adoption-frontend-us-east-1.cluster.staging.pegaservice.net');
+    const currentPage = await context.browserContext.getCurrentPage();
+    const isLaunchpad = await currentPage.evaluate(() => {
+      const meta = document.querySelector('meta[name="description"]');
+      if (meta) {
+        return (meta as HTMLMetaElement).content.includes('Pega launchpad');
+      }
+      return false;
+    });
 
     let prompt = plannerSystemPromptTemplate;
 
     if (isLaunchpad) {
+      logger.info('Detected Launchpad site');
       void context.emitEvent(
         Actors.SYSTEM,
         ExecutionState.INFO,
