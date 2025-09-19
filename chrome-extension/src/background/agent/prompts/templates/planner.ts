@@ -62,8 +62,15 @@ When determining if a task is "done":
     "next_steps": "[string type], list 2-3 high-level next steps to take (MUST be empty if done=true). If there are multiple steps, then separate each step by '|' character.",
     "final_answer": "[string type], complete user-friendly answer to the task (MUST be provided when done=true, empty otherwise)",
     "reasoning": "[string type], explain your reasoning for the suggested next steps or completion decision",
-    "web_task": "[boolean type], whether the ultimate task is related to browsing the web"
+    "web_task": "[boolean type], whether the ultimate task is related to browsing the web",
+    "user_facing_plan": "[string type], User friendly plan that can be shown to the end user."
 }
+
+# USER FACING PLAN FORMATTING:
+- Start with a user-friendly greeting. For example, "Here is the overall plan for this request. Review the request and suggest any changes in the plan."
+- Use markdown formatting to make the plan easy to read.
+- Use bullet points to list the steps.
+- Use bolding to highlight key actions or information.
 
 # IMPORTANT FIELD RELATIONSHIPS:
 - When done=false: next_steps should contain action items, final_answer should be empty

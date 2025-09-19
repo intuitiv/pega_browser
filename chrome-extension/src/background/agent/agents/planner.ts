@@ -41,6 +41,7 @@ export const plannerOutputSchema = z.object({
       throw new Error('Invalid boolean string');
     }),
   ]),
+  user_facing_plan: z.string(),
 });
 
 export type PlannerOutput = z.infer<typeof plannerOutputSchema>;
@@ -78,6 +79,7 @@ export class PlannerAgent extends BaseAgent<typeof plannerOutputSchema, PlannerO
       }
 
       const modelOutput = await this.invoke(plannerMessages);
+      logger.info('Raw planner output', JSON.stringify(modelOutput, null, 2));
       if (!modelOutput) {
         throw new Error('Failed to validate planner output');
       }
@@ -88,6 +90,7 @@ export class PlannerAgent extends BaseAgent<typeof plannerOutputSchema, PlannerO
       const next_steps = filterExternalContent(modelOutput.next_steps);
       const challenges = filterExternalContent(modelOutput.challenges);
       const reasoning = filterExternalContent(modelOutput.reasoning);
+      const user_facing_plan = filterExternalContent(modelOutput.user_facing_plan);
 
       const cleanedPlan: PlannerOutput = {
         ...modelOutput,
@@ -96,12 +99,21 @@ export class PlannerAgent extends BaseAgent<typeof plannerOutputSchema, PlannerO
         reasoning,
         final_answer,
         next_steps,
+        user_facing_plan,
       };
 
       // If task is done, emit the final answer; otherwise emit next steps
       const eventMessage = cleanedPlan.done ? cleanedPlan.final_answer : cleanedPlan.next_steps;
-      this.context.emitEvent(Actors.PLANNER, ExecutionState.STEP_OK, eventMessage);
+      this.context.emitEvent(Actors.PLANNER, ExecutionState.STEP_OK, eventMessage, {
+        plan: cleanedPlan,
+      });
       logger.info('Planner output', JSON.stringify(cleanedPlan, null, 2));
+
+      this.context.emitEvent(
+        Actors.SYSTEM,
+        ExecutionState.INFO,
+        'I have drafted a plan to address your request. Please review it before I proceed.',
+      );
 
       return {
         id: this.id,

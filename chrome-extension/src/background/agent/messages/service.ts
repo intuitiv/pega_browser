@@ -185,7 +185,14 @@ export default class MessageManager {
   public addPlan(plan?: string, position?: number): void {
     if (plan) {
       const cleanedPlan = filterExternalContent(plan, false);
-      const msg = new AIMessage({ content: `<plan>${cleanedPlan}</plan>` });
+      const planObject = JSON.parse(cleanedPlan);
+      const userFacingPlan = planObject.user_facing_plan;
+      const msg = new AIMessage({
+        content: `<plan>${cleanedPlan}</plan>`,
+        additional_kwargs: {
+          user_facing_plan: userFacingPlan,
+        },
+      });
       this.addMessageWithTokens(msg, null, position);
     }
   }

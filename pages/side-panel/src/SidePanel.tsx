@@ -76,7 +76,7 @@ const SidePanel = () => {
 
     fetchTabInfo();
 
-    const tabUpdateListener = (tabId, changeInfo, tab) => {
+    const tabUpdateListener = (tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab) => {
       if (changeInfo.status === 'complete' || changeInfo.favIconUrl) {
         fetchTabInfo();
       }
@@ -302,10 +302,12 @@ const SidePanel = () => {
       }
 
       if (!skip) {
+        const userFacingPlan = data?.plan?.user_facing_plan;
         appendMessage({
           actor,
           content: content || '',
           timestamp: timestamp,
+          user_facing_plan: userFacingPlan,
         });
       }
 
@@ -471,10 +473,7 @@ const SidePanel = () => {
       }
 
       // Create a new chat session for this replay task
-      const newSession = await chatHistoryStore.createSession(
-        `Replay of ${historySessionId.substring(0, 20)}...`,
-        tabId,
-      );
+      const newSession = await chatHistoryStore.createSession(`Replay of ${historySessionId.substring(0, 20)}...`);
       console.log('newSession for replay', newSession);
 
       // Store the new session ID in both state and ref
@@ -625,7 +624,6 @@ const SidePanel = () => {
       if (!isFollowUpMode) {
         const newSession = await chatHistoryStore.createSession(
           text.substring(0, 50) + (text.length > 50 ? '...' : ''),
-          tabId,
         );
         console.log('newSession', newSession);
 
@@ -729,7 +727,7 @@ const SidePanel = () => {
     try {
       const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
       const tabId = tabs[0]?.id;
-      const sessions = await chatHistoryStore.getSessionsMetadata(tabId);
+      const sessions = await chatHistoryStore.getSessionsMetadata();
       setChatSessions(sessions.sort((a, b) => b.createdAt - a.createdAt));
     } catch (error) {
       console.error('Failed to load chat sessions:', error);
@@ -798,7 +796,7 @@ const SidePanel = () => {
 
         // Update favorites in the UI
         const prompts = await favoritesStorage.getAllPrompts();
-        setFavoritePrompts(prompts);
+        // setFavoritePrompts(prompts);
 
         // Return to chat view after pinning
         handleBackToChat(true);
@@ -813,7 +811,7 @@ const SidePanel = () => {
     const loadFavorites = async () => {
       try {
         const prompts = await favoritesStorage.getAllPrompts();
-        setFavoritePrompts(prompts);
+        // setFavoritePrompts(prompts);
       } catch (error) {
         console.error('Failed to load favorite prompts:', error);
       }

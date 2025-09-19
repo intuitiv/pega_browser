@@ -54,6 +54,9 @@ export interface EventData {
   maxSteps: number;
   /** details is the content of the event */
   details: string;
+  plan?: {
+    user_facing_plan?: string;
+  };
 }
 
 export class AgentEvent {

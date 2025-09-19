@@ -11,6 +11,7 @@ export interface Message {
   content: string;
   timestamp: number; // Unix timestamp in milliseconds
   proccessedByNavigator?: boolean; // Whether this message has been processed by the navigator agent
+  user_facing_plan?: string;
 }
 
 export interface ChatMessage extends Message {

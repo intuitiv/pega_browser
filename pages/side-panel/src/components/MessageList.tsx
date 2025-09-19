@@ -1,7 +1,9 @@
 import { type Message, Actors } from '@extension/storage';
 import { ACTOR_PROFILES } from '../types/message';
+import ReactMarkdown from 'react-markdown';
 import { memo, useState } from 'react';
 import Tree from './Tree';
+
 
 interface MessageListProps {
   messages: Message[];
@@ -83,16 +85,23 @@ function UserMessageBlock({ message, isDarkMode = false }: { message: Message; i
               <div key={idx}>{msg}</div>
             ))}
           </div>
-          {isLongMessage && (
-            <button
-              onClick={toggleExpansion}
-              className={`text-xs ${isDarkMode ? 'text-sky-400 hover:text-sky-300' : 'text-sky-600 hover:text-sky-700'}`}>
-              {isExpanded ? 'Show less' : 'Show more'}
-            </button>
-          )}
-          <div className={`text-right text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-300'}`}>
-            {formatTimestamp(message.timestamp)}
+        )}
+
+        <div className="space-y-0.5">
+          <div className={`whitespace-pre-wrap break-words text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+            {isProgress ? (
+              <div className={`h-1 overflow-hidden rounded ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>
+                <div className="h-full animate-progress bg-blue-500" />
+              </div>
+            ) : (
+              message.content.split('|').map((msg, idx) => <div key={idx}>{msg}</div>)
+            )}
           </div>
+          {!isProgress && (
+            <div className={`text-right text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-300'}`}>
+              {formatTimestamp(message.timestamp)}
+            </div>
+          )}
         </div>
       </div>
     </div>
