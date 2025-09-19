@@ -3,19 +3,20 @@ export const launchpadUiKnowledge = `
 ### Typical User Interface Elements in Launchpad:
 
 - Instruction for handling **Picker Drop down menus** in Launchpad UI:
-    1. To select an item from a picker dropdown list, first click on the dropdown arrow or chevron icon on the right-most section of the dropdown element. 
-    2. Then, from the expanded list, select the desired item. 
-    3. The list is typically dynamically loaded, with instances of the relevant rule type. 
+    1. To select an item from a picker dropdown list, first click on the dropdown arrow or chevron icon on the right-most section of the dropdown element.
+    2. Then, from the expanded list, select the desired item.
+    3. The list is typically dynamically loaded, with instances of the relevant rule type.
 	4. The selected item would typically be a hyperlink to the rule instance.
 	5. Do not click on the main link/text if you want to open the picker list. Only click the dropdown arrow/chevron icon.
-	6. At the bottom of the dropdown List, there will be a "Create New" link. Clicking this link will open a new tab to create a new instance of that rule type. Use this if you want to create a new instance instead of selecting an existing one.
+	6. If the list is long, you may directly type the name of the item you want to select in the text box section of the dropdown. This will filter the list to match your input.
+	7. At the bottom of the dropdown List, there will be a "Create New" link. Clicking this link will open a new tab to create a new instance of that rule type. Use this if you want to create a new instance instead of selecting an existing one.
 
 - Instruction for Table Navigation:
 	1.	Condition Check: First, verify that the current page displays data in a table format.
 	2.	Locate Target: To open a specific rule, scan the column explicitly titled "Name" to find the row containing the target rule's name.
 	3.	Execute Action: Click the hyperlink located within that same row (often on the name itself) to navigate to the rule's detail page.
 
-- Instruction for handling with **composite UI component or Input Group** with a Dropdown Button:, 
+- Instruction for handling with **composite UI component or Input Group** with a Dropdown Button:
 	1. You may typically see this to provide a "Value" in various rule forms for e.g. a under a "Parameter value" or "Value" column form
 	2. It can contain a dropdown trigger button and a text input box. 
 		1. The dropdown trigger button is typically on the left side of the input box and opens a menu to select the input's source type. 
