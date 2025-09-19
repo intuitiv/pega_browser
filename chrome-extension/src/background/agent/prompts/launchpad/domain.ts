@@ -112,5 +112,24 @@ To create or update the connector for the \`PUT /api/v1/Books/{id}\` endpoint, f
 7. **Finalize**
       - After configuring all four path parameters, click the **Save** or **Create** button to complete the setup.
 
+### **Data Connections** 
+
+A data connection rule type in Launchpad is a rule used to retrieve and exchange data between the application and external systems or services. Data connections utilize either a REST connector (with operations: Read, Create, Update, Update or Create, Delete) or a Query for integration. Data connections are critical for enabling real-time data exchange and integrating external data sources into Launchpad applications. 
+
+** Configuring a Data Connection for Connection type, **Rest Connector**:
+
+1. To create a new Data Connection, follow the navigation steps to create a new rule of type **Data Connection**.
+    1. Provide appropriate values e.g. Name, Description and select an appropriate **Library** using the picker dropdown in the Create new rule dialog.
+    2. If you are unsure which Library to select, choose the first option in the list.
+
+2. To open and edit an existing Data Connection, follow the navigation steps to open a rule of type **Data Connection**.
+
+3. Once a Data connection configuration page is open, configure it as follows:
+  1. **Make sure** that the Output parameter is of type, "Text" on Parameters Tab using the "Type" dropdown
+  2. Choose the connection type (REST connector or Query) using the "Connection type" dropdown in the **General** tab.
+  3. In the **Operation** dropdown, select the  operation as "Update".
+  4. Select required **Rest Connector** using the picker dropdown in the **General** tab.
+
+4. Finally, click the **Save** or **Create** button to complete the setup.
 
 `;
