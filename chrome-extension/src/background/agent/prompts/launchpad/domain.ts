@@ -67,7 +67,7 @@ To create or update the connector for the \`PUT /api/v1/Books/{id}\` endpoint, f
 2. To open and edit an existing REST Connector, follow the navigation steps to open a rule of type **Rest Connector**.
 
 3. Select or Create an **Integration System** based on the suggested plan using the picker dropdown in the **Service** tab.
-    1. In the example above, we can create a new **Integration System** named \`BooksAPISystem\` with the Base URL set to a constant \`https://example.com\` and select appropriate authentication like oauth.
+    1. In the example above, we should create a new **Integration System** named \`BooksAPISystem\` with the Base URL set to a constant \`https://example.com\` and select appropriate authentication like oauth.
     2. Since this rule creation will open a new tab, recall instructions for creating a new rule in a separate tab as part of an ongoing flow, to create a new rule instance as part of an ongoing flow.
 
 4. **Define Input Parameter** using Parameter tab
@@ -106,6 +106,7 @@ To create or update the connector for the \`PUT /api/v1/Books/{id}\` endpoint, f
 
         1. Set the **Name** to \`id\` (to match the OpenAPI parameter).
         2. For the **Parameter value**, click the dropdown trigger, select **Source from Variable**, and select \`id\` from the drop down using the "composite UI component". This will reference the input parameter, \'id\' we defined earlier.
+        3. Choose Empty behavior as **Throw error/Required** by clicking the dropdown.
         3. Choose **encoding** as **None**.
 
 7. **Finalize**
