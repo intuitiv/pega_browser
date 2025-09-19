@@ -36,7 +36,7 @@ A **REST Connector** enables your application to integrate with external systems
 
 #### **Example: Configuring a \`PUT\` Endpoint**
 
-Let's configure a REST Connector for a \`PUT\` endpoint with a path parameter, based on the following OpenAPI specification:
+Let us create a REST Connector for a \`PUT\` endpoint with a path parameter, based on the following OpenAPI specification:
 
 \`\`\`json
 {
@@ -63,21 +63,27 @@ Let's configure a REST Connector for a \`PUT\` endpoint with a path parameter, b
 }
 \`\`\`
 
-To configure the connector for the \`PUT /api/v1/Books/{id}\` endpoint, follow these steps:
+To create or update the connector for the \`PUT /api/v1/Books/{id}\` endpoint, follow these steps:
 
-1.  **Define Input Parameter** using Parameter tab
+1. To create a new REST Connector, follow the navigation steps to create a new rule of type **Rest Connector**.
+    1. Provide appropriate values e.g. Name, Description and select the correct **Library** (e.g., "My Company") using the picker dropdown.
 
+2. To open and edit an existing REST Connector, follow the navigation steps to open a rule of type **Rest Connector**.
+
+3. Select or Create an **Integration System** based on your requirements using the picker dropdown in the **Service** tab.
+    1. In this example, we can create a new Integration System named \`BooksAPISystem\` with the Base URL set to \`https://example.com\` and select appropriate authentication like oauth.
+
+4. **Define Input Parameter** using Parameter tab
     1.  Navigate to the **Parameters** tab.
     2.  Add a new input parameter.
     3.  Set its **Name** to \`id\`.
     4.  Based on the schema (\`type: "integer"\`), set its **Type** to **Integer** using the "Type Selector" dropdown
 
-1.  **Configure HTTP method**
-
+5.  **Configure HTTP method**
     1.  Navigate back to the **Service** tab.
     2.  In the **Method** dropdown, select **PUT**.
 
-3.  **Configure Resource Path Parameters**
+6.  **Configure Resource Path Parameters**
     In the **Resource path parameters** section, add four parameters in sequence to construct the full path corresponding to each element in our example path - \`/api/v1/Books/{id}\`
 
       - **Parameter #1 (Static Segment \`api\`)**
@@ -99,8 +105,9 @@ To configure the connector for the \`PUT /api/v1/Books/{id}\` endpoint, follow t
 
         1.  Set the **Name** to \`id\` (to match the OpenAPI parameter).
         2.  For the **Parameter value**, click the dropdown trigger, select **Source from Variable**, and enter \`id\` in the text box using the "composite UI component". This must be a case-sensitive match to the input parameter defined in Step 1 where we defined an Input Parameter
-1. **Finalize**
-      - After configuring all four path parameters, click the **Save** button to complete the setup.
+
+7. **Finalize**
+      - After configuring all four path parameters, click the **Save** or **Create** button to complete the setup.
 
 
 `;
