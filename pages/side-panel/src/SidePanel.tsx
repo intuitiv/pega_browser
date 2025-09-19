@@ -1162,7 +1162,6 @@ const SidePanel = () => {
                     mode={mode}
                     onModeChange={(newMode: 'architect' | 'dev') => {
                       setMode(newMode);
-                      handleNewChat();
                       if (newMode === 'dev') {
                         const plannerMessages = messages.filter(
                           msg => msg.actor === Actors.PLANNER && msg.content !== progressMessage,

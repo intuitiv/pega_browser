@@ -235,7 +235,7 @@ chrome.runtime.onConnect.addListener(port => {
           }
 
           default:
-            return port.postMessage({ type: 'error', error: t('errors_cmd_unknown', [message.type]) });
+            return port.postMessage({ type: 'error', error: t('errors_cmd_unknown') });
         }
       } catch (error) {
         console.error('Error handling port message:', error);
@@ -307,6 +307,7 @@ async function setupExecutor(taskId: string, task: string, browserContext: Brows
   browserContext.updateConfig({
     minimumWaitPageLoadTime: generalSettings.minWaitPageLoad / 1000.0,
     displayHighlights: generalSettings.displayHighlights,
+    silentMode: generalSettings.silentMode,
   });
 
   const executor = new Executor(task, taskId, browserContext, navigatorLLM, {

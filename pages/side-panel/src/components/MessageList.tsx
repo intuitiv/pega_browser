@@ -1,6 +1,6 @@
 import { type Message, Actors } from '@extension/storage';
 import { ACTOR_PROFILES } from '../types/message';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import Tree from './Tree';
 
 interface MessageListProps {
@@ -65,15 +65,31 @@ export default memo(function MessageList({ messages, isDarkMode = false }: Messa
 });
 
 function UserMessageBlock({ message, isDarkMode = false }: { message: Message; isDarkMode?: boolean }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const isLongMessage = message.content.length > 75;
+
+  const toggleExpansion = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  const displayedContent = isLongMessage && !isExpanded ? `${message.content.substring(0, 75)}...` : message.content;
+
   return (
     <div className={`flex max-w-full gap-3 rounded-lg p-2 ${isDarkMode ? 'bg-sky-900' : 'bg-sky-50'}`}>
       <div className="min-w-0 flex-1">
         <div>
           <div className={`whitespace-pre-wrap break-words text-2xl ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-            {message.content.split('|').map((msg, idx) => (
+            {displayedContent.split('|').map((msg, idx) => (
               <div key={idx}>{msg}</div>
             ))}
           </div>
+          {isLongMessage && (
+            <button
+              onClick={toggleExpansion}
+              className={`text-xs ${isDarkMode ? 'text-sky-400 hover:text-sky-300' : 'text-sky-600 hover:text-sky-700'}`}>
+              {isExpanded ? 'Show less' : 'Show more'}
+            </button>
+          )}
           <div className={`text-right text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-300'}`}>
             {formatTimestamp(message.timestamp)}
           </div>

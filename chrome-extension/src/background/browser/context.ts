@@ -71,6 +71,11 @@ export default class BrowserContext {
       return true;
     }
 
+    if (this._config.silentMode) {
+      logger.info('attachPage', page.tabId, 'silent mode enabled, skipping puppeteer attachment');
+      return false;
+    }
+
     if (await page.attachPuppeteer()) {
       logger.info('attachPage', page.tabId, 'attached');
       // add page to managed pages
