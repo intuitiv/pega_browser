@@ -1,90 +1,82 @@
-import type { Message } from '@extension/storage';
+import { type Message, Actors } from '@extension/storage';
 import { ACTOR_PROFILES } from '../types/message';
 import { memo } from 'react';
+import Tree from './Tree';
 
 interface MessageListProps {
   messages: Message[];
   isDarkMode?: boolean;
 }
 
+interface TreeNode {
+  id: string;
+  label: React.ReactNode;
+  children?: TreeNode[];
+}
+
 export default memo(function MessageList({ messages, isDarkMode = false }: MessageListProps) {
+  const messageGroups = messages.reduce(
+    (acc, message) => {
+      if (message.actor === Actors.USER) {
+        acc.push({ type: 'user', messages: [message] });
+      } else {
+        const lastGroup = acc[acc.length - 1];
+        if (lastGroup && lastGroup.type === 'system') {
+          lastGroup.messages.push(message);
+        } else {
+          acc.push({ type: 'system', messages: [message] });
+        }
+      }
+      return acc;
+    },
+    [] as { type: 'user' | 'system'; messages: Message[] }[],
+  );
+
   return (
-    <div className="max-w-full space-y-4">
-      {messages.map((message, index) => (
-        <MessageBlock
-          key={`${message.actor}-${message.timestamp}-${index}`}
-          message={message}
-          isSameActor={index > 0 ? messages[index - 1].actor === message.actor : false}
-          isDarkMode={isDarkMode}
-        />
-      ))}
+    <div className="max-w-full space-y-2">
+      {messageGroups.map((group, index) => {
+        if (group.type === 'user') {
+          return group.messages.map(message => (
+            <UserMessageBlock key={`${message.actor}-${message.timestamp}`} message={message} isDarkMode={isDarkMode} />
+          ));
+        }
+        const treeData = group.messages.reduce((acc, message) => {
+          if (message.actor === Actors.PLANNER || message.actor === Actors.SYSTEM) {
+            acc.push({
+              id: `${message.actor}-${message.timestamp}`,
+              label: message.content,
+              children: [],
+            });
+          } else if (message.actor === Actors.NAVIGATOR && acc.length > 0) {
+            const lastNode = acc[acc.length - 1];
+            if (lastNode) {
+              lastNode.children?.push({
+                id: `${message.actor}-${message.timestamp}`,
+                label: message.content,
+              });
+            }
+          }
+          return acc;
+        }, [] as TreeNode[]);
+        return <Tree key={index} data={treeData} isDarkMode={isDarkMode} />;
+      })}
     </div>
   );
 });
 
-interface MessageBlockProps {
-  message: Message;
-  isSameActor: boolean;
-  isDarkMode?: boolean;
-}
-
-function getActorDisplayName(actor: string, inProgress: boolean) {
-  switch (actor) {
-    case 'Planner':
-      return inProgress ? 'Planning' : 'Architect';
-    case 'Navigator':
-      return inProgress ? 'Executing' : 'Developer';
-    default:
-      return actor || 'Unknown';
-  }
-}
-
-function MessageBlock({ message, isSameActor, isDarkMode = false }: MessageBlockProps) {
-  if (!message.actor) {
-    console.error('No actor found');
-    return <div />;
-  }
-  const actor = ACTOR_PROFILES[message.actor as keyof typeof ACTOR_PROFILES];
-  const isProgress = message.content === 'Showing progress...';
-
+function UserMessageBlock({ message, isDarkMode = false }: { message: Message; isDarkMode?: boolean }) {
   return (
-    <div
-      className={`flex max-w-full gap-3 ${
-        !isSameActor
-          ? `mt-4 border-t ${isDarkMode ? 'border-sky-800/50' : 'border-sky-200/50'} pt-4 first:mt-0 first:border-t-0 first:pt-0`
-          : ''
-      }`}>
-      {!isSameActor && (
-        <div
-          className="flex size-8 shrink-0 items-center justify-center rounded-full"
-          style={{ backgroundColor: actor.iconBackground }}>
-          <img src={actor.icon} alt={actor.name} className="size-6" />
-        </div>
-      )}
-      {isSameActor && <div className="w-8" />}
-
+    <div className={`flex max-w-full gap-3 rounded-lg p-2 ${isDarkMode ? 'bg-sky-900' : 'bg-sky-50'}`}>
       <div className="min-w-0 flex-1">
-        {!isSameActor && (
-          <div className={`mb-1 text-sm font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-900'}`}>
-            {getActorDisplayName(actor.name, isProgress)}
+        <div>
+          <div className={`whitespace-pre-wrap break-words text-2xl ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+            {message.content.split('|').map((msg, idx) => (
+              <div key={idx}>{msg}</div>
+            ))}
           </div>
-        )}
-
-        <div className="space-y-0.5">
-          <div className={`whitespace-pre-wrap break-words text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-            {isProgress ? (
-              <div className={`h-1 overflow-hidden rounded ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>
-                <div className="h-full animate-progress bg-blue-500" />
-              </div>
-            ) : (
-              message.content.split('|').map((msg, idx) => <div key={idx}>{msg}</div>)
-            )}
+          <div className={`text-right text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-300'}`}>
+            {formatTimestamp(message.timestamp)}
           </div>
-          {!isProgress && (
-            <div className={`text-right text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-300'}`}>
-              {formatTimestamp(message.timestamp)}
-            </div>
-          )}
         </div>
       </div>
     </div>
