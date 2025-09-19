@@ -22,7 +22,7 @@ declare global {
 }
 
 const SidePanel = () => {
-  const progressMessage = 'Showing progress...';
+  const progressMessage = 'Thinking...';
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputEnabled, setInputEnabled] = useState(true);
   const [showStopButton, setShowStopButton] = useState(false);
@@ -636,8 +636,8 @@ const SidePanel = () => {
 
       if (actMode === 'dev') {
         const message = {
-          actor: Actors.USER,
-          content: `Execute the below plan: \n ${text}`,
+          actor: Actors.SYSTEM,
+          content: `Let me consolidate the above plan`,
           timestamp: Date.now(),
         };
         appendMessage(message, sessionIdRef.current);

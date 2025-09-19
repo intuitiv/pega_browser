@@ -109,12 +109,6 @@ export class PlannerAgent extends BaseAgent<typeof plannerOutputSchema, PlannerO
       });
       logger.info('Planner output', JSON.stringify(cleanedPlan, null, 2));
 
-      this.context.emitEvent(
-        Actors.SYSTEM,
-        ExecutionState.INFO,
-        'I have drafted a plan to address your request. Please review it before I proceed.',
-      );
-
       return {
         id: this.id,
         result: cleanedPlan,

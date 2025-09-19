@@ -2,17 +2,11 @@ import { type Message, Actors } from '@extension/storage';
 import { ACTOR_PROFILES } from '../types/message';
 import ReactMarkdown from 'react-markdown';
 import { memo, useState } from 'react';
-import Tree from './Tree';
+import Tree, { type TreeNode } from './Tree';
 
 interface MessageListProps {
   messages: Message[];
   isDarkMode?: boolean;
-}
-
-interface TreeNode {
-  id: string;
-  label: React.ReactNode;
-  children?: TreeNode[];
 }
 
 export default memo(function MessageList({ messages, isDarkMode = false }: MessageListProps) {
@@ -45,11 +39,7 @@ export default memo(function MessageList({ messages, isDarkMode = false }: Messa
           if (message.actor === Actors.PLANNER || message.actor === Actors.SYSTEM) {
             acc.push({
               id: `${message.actor}-${message.timestamp}`,
-              label: message.user_facing_plan ? (
-                <ReactMarkdown>{message.user_facing_plan}</ReactMarkdown>
-              ) : (
-                message.content
-              ),
+              label: message.user_facing_plan || message.content,
               children: [],
             });
           } else if (message.actor === Actors.NAVIGATOR && acc.length > 0) {
@@ -83,7 +73,7 @@ function UserMessageBlock({ message, isDarkMode = false }: { message: Message; i
     <div className={`flex max-w-full gap-3 rounded-lg p-2 ${isDarkMode ? 'bg-sky-900' : 'bg-sky-50'}`}>
       <div className="min-w-0 flex-1">
         <div>
-          <div className={`whitespace-pre-wrap break-words text-2xl ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+          <div className={`whitespace-pre-wrap break-words text-xl ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
             {displayedContent.split('|').map((msg, idx) => (
               <div key={idx}>{msg}</div>
             ))}

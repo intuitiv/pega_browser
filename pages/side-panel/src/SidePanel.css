@@ -1,165 +1,53 @@
-/* Add this at the top of the file */
-body {
-    border-color:  #5A65C2 !important; /* Pega's urgent color for emphasis */
-}
-
-/* Remove unused classes: .App, .App-logo, .App-header */
-
-code {
-    background: rgba(7, 107, 201, 0.1); /* Lighter shade of Pega's primary brand color */
-    border-radius: 0.25rem;
-    padding: 0.2rem 0.5rem;
-    color:  #5A65C2 /* Pega's primary brand color */
-}
-
-/* Dark mode support for code */
-@media (prefers-color-scheme: dark) {
-    code {
-        background: rgba(7, 107, 201, 0.2); /* Slightly more opaque for dark mode */
-        color: #ffffff; /* White text for contrast */
-    }
-}
-
-/* Scrollbar styles */
-::-webkit-scrollbar {
-    width: 8px;
-}
-
-::-webkit-scrollbar-track {
-    background: #e9eef3; /* Pega's application background color */
-}
-
-::-webkit-scrollbar-thumb {
-    background: #076bc9; /* Pega's primary brand color */
-    border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #054a8b; /* Darker shade for hover */
-}
-
-/* Dark mode scrollbar */
-@media (prefers-color-scheme: dark) {
-    ::-webkit-scrollbar-track {
-        background: #1e293b; /* A dark slate for dark mode */
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background: #076bc9;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-        background: #0982e6; /* Lighter shade for hover in dark mode */
-    }
-}
-
-/* Used classes from the component */
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.75rem;
-    background-color: transparent;
-    border-bottom: 1px solid  #5A65C2
-}
-
-/* Dark mode header border */
-@media (prefers-color-scheme: dark) {
-    .header {
-        border-bottom: 1px solid rgba(7, 107, 201, 0.4);
-    }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  border-bottom: 1px solid;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .header-logo {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .header-icons {
-    display: flex;
-    gap: 0.75rem;
-    align-items: center;
+  display: flex;
+  gap: 0.5rem;
 }
 
 .header-icon {
-    color: #5A65C2; /* Pega's interactive color */
-    cursor: pointer;
-    transition: color 0.2s ease;
-    opacity: 0.9;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: background-color 0.2s;
 }
 
-.header-icon:hover {
-    color:  #5A65C2;
-    opacity: 1;
+.markdown-content ul {
+  list-style-type: disc;
+  padding-left: 20px;
+  margin-left: 20px;
 }
 
-.send-button {
-    color: #5A65C2; /* Pega's interactive color */
-    cursor: pointer;
-    transition: color 0.2s ease;
-    opacity: 0.9;
+.markdown-content ol {
+  list-style-type: decimal;
+  padding-left: 20px;
 }
 
-.send-button:hover {
-    color:  #5A65C2;
-    opacity: 1;
+.markdown-content li {
+  margin-bottom: 4px;
 }
 
-.send-button:disabled {
-    color: #8397ab; /* Pega's info color for disabled state */
-    cursor: not-allowed;
-    opacity: 0.6;
+.markdown-content p {
+  margin-bottom: 8px;
 }
 
-/* Add these styles to your existing CSS */
-.scrollbar-gutter-stable {
-    scrollbar-gutter: stable;
+.markdown-content strong {
+  font-weight: bold;
 }
 
-/* Optional: Style the scrollbar for webkit browsers */
-.scrollbar-gutter-stable::-webkit-scrollbar {
-    width: 8px;
-}
-
-.scrollbar-gutter-stable::-webkit-scrollbar-track {
-    background: #e9eef3;  /* Pega's app background */
-}
-
-.scrollbar-gutter-stable::-webkit-scrollbar-thumb {
-    background: #cfcfcf;  /* Pega's border line color */
-    border-radius: 4px;
-}
-
-.scrollbar-gutter-stable::-webkit-scrollbar-thumb:hover {
-    background: #8397ab;  /* Pega's info color for hover */
-}
-
-/* Dark mode scrollbar for scrollbar-gutter-stable */
-@media (prefers-color-scheme: dark) {
-    .scrollbar-gutter-stable::-webkit-scrollbar-track {
-        background: #1e293b;  /* A dark slate */
-    }
-
-    .scrollbar-gutter-stable::-webkit-scrollbar-thumb {
-        background: #8397ab;
-    }
-
-    .scrollbar-gutter-stable::-webkit-scrollbar-thumb:hover {
-        background: #aab8c2; /* Lighter shade for dark mode hover */
-    }
-}
-
-/* Dark mode text and background colors */
-@media (prefers-color-scheme: dark) {
-    .dark-mode-text {
-        color: #ffffff !important; /* White text for dark backgrounds */
-    }
-
-    .dark-mode-bg {
-        background-color: #000000 !important; /* Pega's dark color */
-    }
-
-    .dark-mode-border {
-        border-color: #475569 !important; /* A slate color for borders in dark mode */
-    }
+.markdown-content em {
+  font-style: italic;
 }

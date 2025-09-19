@@ -174,7 +174,7 @@ export default function ChatInput({
                 type="button"
                 className={`px-3 py-0.5 text-xs font-medium rounded-r-full ${
                   mode === 'dev'
-                    ? 'bg-orange-500 text-white'
+                    ? 'bg-sky-500 text-white'
                     : 'text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                 }`}
                 onClick={() => onModeChange('dev')}>

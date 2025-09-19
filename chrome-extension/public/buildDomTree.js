@@ -153,7 +153,7 @@ window.buildDomTree = (
         container.style.backgroundColor = 'transparent';
         // Show or hide the container based on the showHighlightElements flag
         container.style.display = showHighlightElements ? 'block' : 'none';
-        container.style.boxShadow = 'inset 0 0 20px 8px #b0daf1, 0 0 40px 16px #b0daf166';
+        container.style.boxShadow = 'inset 0 0 20px 8px #5A65C2, 0 0 40px 16px #5A65C266';
         // container.style.margin = '5px -5px -5px 5px';
         container.style.transition = 'border 0.3s, box-shadow 0.3s';
         container.style.borderRadius = '4px';

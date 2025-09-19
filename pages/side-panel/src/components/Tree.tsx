@@ -1,8 +1,10 @@
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface TreeNode {
   id: string;
-  label: React.ReactNode;
+  label: string;
   children?: TreeNode[];
 }
 
@@ -21,7 +23,9 @@ const TreeNode: React.FC<{ node: TreeNode; isDarkMode?: boolean }> = ({ node, is
         style={{ marginLeft: '1.25rem' }}>
         <div className="absolute left-0 h-full w-px bg-gray-300 dark:bg-gray-600" />
         <div className="absolute left-0 top-1/2 h-px w-4 -translate-y-1/2 bg-gray-300 dark:bg-gray-600" />
-        <div className="z-10 flex-1 rounded-md bg-white p-2 dark:bg-gray-800">{node.label}</div>
+        <div className="markdown-content z-10 flex-1 rounded-md bg-white p-2 dark:bg-gray-800">
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{node.label}</ReactMarkdown>
+        </div>
       </div>
       {hasChildren && (
         <div className="mt-2" style={{ marginLeft: '1.25rem' }}>
@@ -47,7 +51,9 @@ const Tree: React.FC<TreeProps> = ({ data, isDarkMode = false }) => {
               }`}>
               <div className={`h-2 w-2 rounded-full ${isDarkMode ? 'bg-gray-400' : 'bg-gray-500'}`} />
             </div>
-            <div className="flex-1 rounded-md bg-white p-2 dark:bg-gray-800">{node.label}</div>
+            <div className="markdown-content flex-1 rounded-md bg-white p-2 dark:bg-gray-800">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{node.label}</ReactMarkdown>
+            </div>
           </div>
           {node.children && node.children.length > 0 && (
             <div className="mt-2" style={{ marginLeft: '1.25rem' }}>

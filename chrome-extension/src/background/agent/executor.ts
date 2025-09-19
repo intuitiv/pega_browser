@@ -172,6 +172,11 @@ export class Executor {
         }
       } else {
         latestPlanOutput = await this.runPlanner();
+        this.context.emitEvent(
+          Actors.SYSTEM,
+          ExecutionState.INFO,
+          'I have drafted a plan to address your request. Please review it before I proceed.',
+        );
         if (latestPlanOutput && latestPlanOutput.result) {
           latestPlanOutput.result.done = true;
         }
