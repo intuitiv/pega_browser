@@ -4,7 +4,6 @@ import ReactMarkdown from 'react-markdown';
 import { memo, useState } from 'react';
 import Tree from './Tree';
 
-
 interface MessageListProps {
   messages: Message[];
   isDarkMode?: boolean;
@@ -46,7 +45,11 @@ export default memo(function MessageList({ messages, isDarkMode = false }: Messa
           if (message.actor === Actors.PLANNER || message.actor === Actors.SYSTEM) {
             acc.push({
               id: `${message.actor}-${message.timestamp}`,
-              label: message.content,
+              label: message.user_facing_plan ? (
+                <ReactMarkdown>{message.user_facing_plan}</ReactMarkdown>
+              ) : (
+                message.content
+              ),
               children: [],
             });
           } else if (message.actor === Actors.NAVIGATOR && acc.length > 0) {
@@ -85,23 +88,16 @@ function UserMessageBlock({ message, isDarkMode = false }: { message: Message; i
               <div key={idx}>{msg}</div>
             ))}
           </div>
-        )}
-
-        <div className="space-y-0.5">
-          <div className={`whitespace-pre-wrap break-words text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-            {isProgress ? (
-              <div className={`h-1 overflow-hidden rounded ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>
-                <div className="h-full animate-progress bg-blue-500" />
-              </div>
-            ) : (
-              message.content.split('|').map((msg, idx) => <div key={idx}>{msg}</div>)
-            )}
-          </div>
-          {!isProgress && (
-            <div className={`text-right text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-300'}`}>
-              {formatTimestamp(message.timestamp)}
-            </div>
+          {isLongMessage && (
+            <button
+              onClick={toggleExpansion}
+              className={`text-xs ${isDarkMode ? 'text-sky-400 hover:text-sky-300' : 'text-sky-600 hover:text-sky-700'}`}>
+              {isExpanded ? 'Show less' : 'Show more'}
+            </button>
           )}
+          <div className={`text-right text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-300'}`}>
+            {formatTimestamp(message.timestamp)}
+          </div>
         </div>
       </div>
     </div>
