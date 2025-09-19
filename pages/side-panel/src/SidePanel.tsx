@@ -1010,7 +1010,7 @@ const SidePanel = () => {
   return (
     <div>
       <div
-        className={`flex h-screen flex-col ${isDarkMode ? 'bg-slate-900' : "bg-[url('/bg.jpg')] bg-cover bg-no-repeat"} overflow-hidden border ${isDarkMode ? 'border-sky-800' : 'border-[#5A65C2]'} rounded-2xl`}>
+        className={`flex h-screen flex-col ${isDarkMode ? 'bg-slate-900' : "bg-[url('/bg.jpg')] bg-cover bg-no-repeat"} overflow-y-auto min-w-[350px] scrollbar-gutter-stable border ${isDarkMode ? 'border-sky-800' : 'border-[#5A65C2]'} rounded-2xl`}>
         <header className="header relative">
           <div className="header-logo">
             {showHistory ? (
@@ -1122,8 +1122,7 @@ const SidePanel = () => {
             {/* Show normal chat interface when models are configured */}
             {hasConfiguredModels === true && (
               <>
-                <div
-                  className={`flex-1 overflow-y-auto ${messages.length > 0 ? 'scrollbar-gutter-stable' : ''} p-2 ${isDarkMode ? 'bg-slate-900/80' : ''}`}>
+                <div className={`flex-1 p-2 ${isDarkMode ? 'bg-slate-900/80' : ''}`}>
                   {messages.length > 0 ? (
                     <MessageList messages={messages} isDarkMode={isDarkMode} />
                   ) : (

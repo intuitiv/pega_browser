@@ -128,6 +128,7 @@ export class Executor {
    * @returns {Promise<void>}
    */
   async execute(actor: string): Promise<void> {
+    this.context.initialActor = actor;
     logger.info(`🚀 Executing task: ${this.tasks[this.tasks.length - 1]}`);
     // reset the step counter
     const context = this.context;

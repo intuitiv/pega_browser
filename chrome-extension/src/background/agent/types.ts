@@ -45,6 +45,7 @@ export class AgentContext {
   consecutiveFailures: number;
   nSteps: number;
   stepInfo: AgentStepInfo | null;
+  initialActor: string;
   actionResults: ActionResult[];
   stateMessageAdded: boolean;
   history: AgentStepHistory;
@@ -70,6 +71,7 @@ export class AgentContext {
     this.nSteps = 0;
     this.consecutiveFailures = 0;
     this.stepInfo = null;
+    this.initialActor = '';
     this.actionResults = [];
     this.stateMessageAdded = false;
     this.history = new AgentStepHistory();

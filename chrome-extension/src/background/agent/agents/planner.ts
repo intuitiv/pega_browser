@@ -102,10 +102,15 @@ export class PlannerAgent extends BaseAgent<typeof plannerOutputSchema, PlannerO
         user_facing_plan,
       };
 
+      const finalPlan = { ...cleanedPlan };
+      if (this.context.initialActor === 'navigator') {
+        finalPlan.user_facing_plan = `\nNext steps are:\n${finalPlan.next_steps}`;
+      }
+
       // If task is done, emit the final answer; otherwise emit next steps
-      const eventMessage = cleanedPlan.done ? cleanedPlan.final_answer : cleanedPlan.next_steps;
+      const eventMessage = finalPlan.done ? finalPlan.final_answer : finalPlan.next_steps;
       this.context.emitEvent(Actors.PLANNER, ExecutionState.STEP_OK, eventMessage, {
-        plan: cleanedPlan,
+        plan: finalPlan,
       });
       logger.info('Planner output', JSON.stringify(cleanedPlan, null, 2));
 
