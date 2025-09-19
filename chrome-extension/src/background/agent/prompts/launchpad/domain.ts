@@ -13,11 +13,10 @@ An **Integration System** is a reusable component that establishes a secure and 
   - **Defines Connection Details**: Specifies the base URL for the external service.
   - **Manages Authentication**: Configures the authentication method (e.g., API keys, OAuth) required for a secure connection.
 
-**Configuration:**
+**Required Configuration to be provided:**
 
-  - **Base URL Source**: The Base URL can be set as a constant value or sourced dynamically from a \`Configuration Setting\` rule.
-      - **Static URL**: Provide a fixed base URL directly in the "Base URL" field.
-      - **Dynamic URLs**: Use \`Configuration Setting\` objects to define different base URLs for various environments (e.g., development, staging, production).
+  - **Base URL Source**: The Base URL source can be set as a constant value or sourced dynamically from a \`Configuration Setting\` rule. Assume the source as Constant unless otherwise specified.
+  - **Base URL**: Provide a fixed base URL directly in the "Base URL" field if you selected "Constant" as the source above.
   - **Authentication Profile**: Select or create an appropriate authentication profile using the picker dropdown in the UI.
 
 ### **REST Connectors**
@@ -68,7 +67,7 @@ To create or update the connector for the \`PUT /api/v1/Books/{id}\` endpoint, f
 2. To open and edit an existing REST Connector, follow the navigation steps to open a rule of type **Rest Connector**.
 
 3. Select or Create an **Integration System** based on the suggested plan using the picker dropdown in the **Service** tab.
-    1. In the example above, we can create a new Integration System named \`BooksAPISystem\` with the Base URL set to \`https://example.com\` and select appropriate authentication like oauth.
+    1. In the example above, we can create a new **Integration System** named \`BooksAPISystem\` with the Base URL set to a constant \`https://example.com\` and select appropriate authentication like oauth.
     2. Since this rule creation will open a new tab, recall instructions for creating a new rule in a separate tab as part of an ongoing flow, to create a new rule instance as part of an ongoing flow.
 
 4. **Define Input Parameter** using Parameter tab
