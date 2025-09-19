@@ -622,7 +622,7 @@ const SidePanel = () => {
       setShowStopButton(true);
 
       // Create a new chat session for this task if not in follow-up mode
-      if (!isFollowUpMode || (actMode === 'dev' && !sessionIdRef.current)) {
+      if (!isFollowUpMode) {
         const newSession = await chatHistoryStore.createSession(
           text.substring(0, 50) + (text.length > 50 ? '...' : ''),
           tabId,
@@ -637,7 +637,7 @@ const SidePanel = () => {
 
       if (actMode === 'dev') {
         const message = {
-          actor: Actors.SYSTEM,
+          actor: Actors.USER,
           content: `Execute the below plan: \n ${text}`,
           timestamp: Date.now(),
         };
@@ -658,7 +658,7 @@ const SidePanel = () => {
       }
 
       // Send message using the utility function
-      if (isFollowUpMode && actMode !== 'dev') {
+      if (isFollowUpMode) {
         // Send as follow-up task
         await sendMessage({
           type: 'follow_up_task',
@@ -1162,7 +1162,6 @@ const SidePanel = () => {
                     mode={mode}
                     onModeChange={(newMode: 'architect' | 'dev') => {
                       setMode(newMode);
-                      handleNewChat();
                       if (newMode === 'dev') {
                         const plannerMessages = messages.filter(
                           msg => msg.actor === Actors.PLANNER && msg.content !== progressMessage,
