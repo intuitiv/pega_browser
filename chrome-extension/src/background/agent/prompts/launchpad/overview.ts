@@ -44,7 +44,7 @@ export const launchpadOverview = `
         4. After saving the new rule instance, return to the original tab where you were working on the flow.
         5. In the relevant "Picker Drop down menus", click the chevron dropdown icon on the right side of the dropdown menu to select the newly created rule instance by name from the list.
 
-- Adding parameters to a rule instance:
+- Adding input parameters to a rule instance:
     - Procedure for adding an Input Parameter to a rule using Parameters tab:
         1.	Navigate: Ensure you are in the "Parameters" tab.
         2.	Initiate Add: Locate and click the "Add" link or button. A new, empty row will be added to the input parameters table.
@@ -54,5 +54,14 @@ export const launchpadOverview = `
         4.	Select from Type Selector Dropdown:
             •	In the "Type" column, click the chevron dropdown icon on the right side of the dropdown menu to reveal the list of available types.
             •	Select the option from the list that exactly matches required Type.
-    
+
+- Specifying an ouput parameter for a rule instance of a certain type:
+    - Procedure for adding an Output Parameter to a rule using Parameters tab:
+        1.	Navigate: Ensure you are in the "Parameters" tab.
+        2.	Locate Output parameters section: 
+            - Provide an appropriate description in the "Description" text box.
+            - In the "Type" dropdown, click the chevron dropdown icon on the right side of the dropdown menu to reveal the list of available types.
+            - Select the option from the list that exactly matches required Type. For example, "Text", "Integer" etc.
+
+
 `;
