@@ -8,11 +8,12 @@ window.buildDomTree = (
     startHighlightIndex: 0,
   },
 ) => {
+  const HIGHLIGHT_CONTAINER_ID = 'playwright-highlight-container';
+
   const { showHighlightElements, focusHighlightIndex, viewportExpansion, startHighlightIndex, startId, debugMode } =
     args;
   // Make sure to do highlight elements always, but we can hide the highlights if needed
-  const doHighlightElements = true;
-  const disableHighlight = true;
+  const doHighlightElements = false;
 
   let highlightIndex = startHighlightIndex; // Reset highlight index
 
@@ -27,6 +28,8 @@ window.buildDomTree = (
       DOM_CACHE.computedStyles = new WeakMap();
     },
   };
+
+  highlightElement(document.body, 0);
 
   /**
    * Gets the cached bounding rect for an element.
@@ -100,8 +103,6 @@ window.buildDomTree = (
 
   const ID = { current: startId };
 
-  const HIGHLIGHT_CONTAINER_ID = 'playwright-highlight-container';
-
   // Add a WeakMap cache for XPath strings
   const xpathCache = new WeakMap();
 
@@ -151,14 +152,19 @@ window.buildDomTree = (
         container.style.zIndex = '2147483647';
         container.style.backgroundColor = 'transparent';
         // Show or hide the container based on the showHighlightElements flag
-        container.style.display = showHighlightElements && !disableHighlight ? 'block' : 'none';
+        container.style.display = showHighlightElements ? 'block' : 'none';
+        container.style.boxShadow = 'inset 0 0 20px 8px #b0daf1, 0 0 40px 16px #b0daf166';
+        // container.style.margin = '5px -5px -5px 5px';
+        container.style.transition = 'border 0.3s, box-shadow 0.3s';
+        container.style.borderRadius = '4px';
+        container.className = 'playwright-highlight-label';
         document.body.appendChild(container);
       }
 
       // Get element client rects
       const rects = element.getClientRects(); // Use getClientRects()
 
-      if (!rects || rects.length === 0) return index; // Exit if no rects
+      if (!rects || rects.length === 0 || !doHighlightElements) return index; // Exit if no rects
 
       // Generate a color based on the index
       const colors = [
