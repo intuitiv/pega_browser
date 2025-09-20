@@ -7,12 +7,14 @@ import { GeneralSettings } from './components/GeneralSettings';
 import { ModelSettings } from './components/ModelSettings';
 import { FirewallSettings } from './components/FirewallSettings';
 import { AnalyticsSettings } from './components/AnalyticsSettings';
+import { ApplicationSettings } from './components/ApplicationSettings';
 
-type TabTypes = 'general' | 'models' | 'firewall' | 'analytics' | 'help';
+type TabTypes = 'general' | 'models' | 'firewall' | 'analytics' | 'help' | 'applications';
 
 const TABS: { id: TabTypes; icon: string; label: string }[] = [
   { id: 'general', icon: '⚙️', label: t('options_tabs_general') },
   { id: 'models', icon: '📊', label: t('options_tabs_models') },
+  { id: 'applications', icon: '📊', label: t('options_tabs_applications') },
   { id: 'firewall', icon: '🔒', label: t('options_tabs_firewall') },
   { id: 'analytics', icon: '📈', label: 'Analytics' },
   { id: 'help', icon: '📚', label: t('options_tabs_help') },
@@ -47,6 +49,8 @@ const Options = () => {
     switch (activeTab) {
       case 'general':
         return <GeneralSettings isDarkMode={isDarkMode} />;
+      case 'applications':
+        return <ApplicationSettings isDarkMode={isDarkMode} />;
       case 'models':
         return <ModelSettings isDarkMode={isDarkMode} />;
       case 'firewall':

@@ -205,6 +205,9 @@
   "options_tabs_models": {
     "message": "Models"
   },
+  "options_tabs_applications": {
+    "message": "Applications"
+  },
   "options_tabs_firewall": {
     "message": "Firewall"
   },

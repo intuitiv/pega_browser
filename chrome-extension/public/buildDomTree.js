@@ -159,6 +159,7 @@ window.buildDomTree = (
         container.style.borderRadius = '4px';
         container.className = 'playwright-highlight-label';
         document.body.appendChild(container);
+        setTimeout(() => document.body.removeChild(container), 3000);
       }
 
       // Get element client rects

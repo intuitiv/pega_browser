@@ -11,22 +11,22 @@ import { logger } from '@src/background/log';
 export class PlannerPrompt extends BasePrompt {
   async getSystemMessage(context: AgentContext): Promise<SystemMessage> {
     const currentPage = await context.browserContext.getCurrentPage();
-    const isLaunchpad = await currentPage.evaluate(() => {
-      const meta = document.querySelector('meta[name="description"]');
-      if (meta) {
-        return (meta as HTMLMetaElement).content.includes('Pega launchpad');
-      }
-      return false;
-    });
-
+    const storageResult = await chrome.storage.local.get('supportedApplications');
+    const supportedApplications = storageResult.supportedApplications || [];
+    const tabUrl = (await currentPage.getState()).url;
+    const supportedApp = supportedApplications.find((app: { url: string }) => tabUrl.includes(app.url));
     let prompt = plannerSystemPromptTemplate;
 
-    if (isLaunchpad) {
-      void context.emitEvent(Actors.SYSTEM, ExecutionState.INFO, 'Including Launchpad domain-specific knowledge.');
+    if (supportedApp) {
+      void context.emitEvent(
+        Actors.SYSTEM,
+        ExecutionState.INFO,
+        `Including ${supportedApp.name} domain-specific knowledge.`,
+      );
       const appSpecificKnowledge = `
 # Application Specific Knowledge
 
-The current application or website that we are working on has been identified as the "Launchpad" application. Use the following context to plan appropriate actions.
+The current application or website that we are working on has been identified as the "${supportedApp.name}" application. Use the following context to plan appropriate actions.
 
 ## Application Overview
 ${launchpadOverview}
