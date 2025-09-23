@@ -54,6 +54,7 @@ export const launchpadOverview = `
         4.	Select from Type Selector Dropdown:
             •	In the "Type" column, click the chevron dropdown icon on the right side of the dropdown menu to reveal the list of available types.
             •	Select the option from the list that exactly matches required Type.
+            - For example, "Text", "Integer" etc.
 
 - Specifying an ouput parameter for a rule instance of a certain type:
     - Procedure for adding an Output Parameter to a rule using Parameters tab:
