@@ -9,12 +9,16 @@ interface Application {
   id: string;
   name: string;
   url: string;
+  domainKnowledge?: string;
+  uiCustomization?: string;
 }
 
 export const ApplicationSettings = ({ isDarkMode = false }: ApplicationSettingsProps) => {
   const [applications, setApplications] = useState<Application[]>([]);
   const [newApplicationName, setNewApplicationName] = useState('');
   const [newApplicationUrl, setNewApplicationUrl] = useState('');
+  const [domainKnowledgeFile, setDomainKnowledgeFile] = useState<File | null>(null);
+  const [uiCustomizationFile, setUiCustomizationFile] = useState<File | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editName, setEditName] = useState('');
   const [editUrl, setEditUrl] = useState('');
@@ -53,6 +57,8 @@ export const ApplicationSettings = ({ isDarkMode = false }: ApplicationSettingsP
       id: Date.now().toString(),
       name: newApplicationName.trim(),
       url: newApplicationUrl.trim(),
+      domainKnowledge: domainKnowledgeFile?.name,
+      uiCustomization: uiCustomizationFile?.name,
     };
 
     const updatedApps = [...applications, newApp];
@@ -62,6 +68,8 @@ export const ApplicationSettings = ({ isDarkMode = false }: ApplicationSettingsP
     // Clear form
     setNewApplicationName('');
     setNewApplicationUrl('');
+    setDomainKnowledgeFile(null);
+    setUiCustomizationFile(null);
   };
 
   const handleDeleteApplication = async (id: string) => {
@@ -114,14 +122,14 @@ export const ApplicationSettings = ({ isDarkMode = false }: ApplicationSettingsP
       <div
         className={`rounded-lg border ${isDarkMode ? 'border-slate-700 bg-slate-800' : 'border-blue-100 bg-gray-50'} p-6 text-left shadow-sm`}>
         <h2 className={`mb-4 text-xl font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
-          Supported Applications
+          Customised applications
         </h2>
 
         {/* Add New Application Form */}
         <div
           className={`mb-6 rounded-lg border ${isDarkMode ? 'border-gray-700 bg-slate-700' : 'border-gray-200 bg-white'} p-4`}>
           <h3 className={`mb-4 text-lg font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-            Add New Application
+            Customise a new website
           </h3>
 
           <div className="space-y-4">
@@ -129,7 +137,7 @@ export const ApplicationSettings = ({ isDarkMode = false }: ApplicationSettingsP
               <label
                 htmlFor="app-name"
                 className={`w-32 text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Application Name
+                Name
               </label>
               <input
                 id="app-name"
@@ -145,7 +153,7 @@ export const ApplicationSettings = ({ isDarkMode = false }: ApplicationSettingsP
               <label
                 htmlFor="app-url"
                 className={`w-32 text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Application URL
+                URL
               </label>
               <input
                 id="app-url"
@@ -153,6 +161,36 @@ export const ApplicationSettings = ({ isDarkMode = false }: ApplicationSettingsP
                 placeholder="https://example.com"
                 value={newApplicationUrl}
                 onChange={e => setNewApplicationUrl(e.target.value)}
+                className={`flex-1 rounded-md border text-sm ${isDarkMode ? 'border-slate-600 bg-slate-800 text-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-800' : 'border-gray-300 bg-white text-gray-700 focus:border-blue-400 focus:ring-2 focus:ring-blue-200'} px-3 py-2 outline-none`}
+              />
+            </div>
+
+            <div className="flex items-center">
+              <label
+                htmlFor="domain-knowledge"
+                className={`w-32 text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                Domain Knowledge
+              </label>
+              <input
+                id="domain-knowledge"
+                type="file"
+                accept=".json,.md"
+                onChange={e => setDomainKnowledgeFile(e.target.files ? e.target.files[0] : null)}
+                className={`flex-1 rounded-md border text-sm ${isDarkMode ? 'border-slate-600 bg-slate-800 text-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-800' : 'border-gray-300 bg-white text-gray-700 focus:border-blue-400 focus:ring-2 focus:ring-blue-200'} px-3 py-2 outline-none`}
+              />
+            </div>
+
+            <div className="flex items-center">
+              <label
+                htmlFor="ui-customization"
+                className={`w-32 text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                UI Customization
+              </label>
+              <input
+                id="ui-customization"
+                type="file"
+                accept=".json,.md"
+                onChange={e => setUiCustomizationFile(e.target.files ? e.target.files[0] : null)}
                 className={`flex-1 rounded-md border text-sm ${isDarkMode ? 'border-slate-600 bg-slate-800 text-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-800' : 'border-gray-300 bg-white text-gray-700 focus:border-blue-400 focus:ring-2 focus:ring-blue-200'} px-3 py-2 outline-none`}
               />
             </div>
@@ -173,10 +211,6 @@ export const ApplicationSettings = ({ isDarkMode = false }: ApplicationSettingsP
 
         {/* Applications List */}
         <div className="space-y-4">
-          <h3 className={`text-lg font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-            Configured Applications
-          </h3>
-
           {applications.length === 0 ? (
             <div className="py-8 text-center">
               <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
@@ -196,7 +230,7 @@ export const ApplicationSettings = ({ isDarkMode = false }: ApplicationSettingsP
                         <label
                           htmlFor={`edit-name-${app.id}`}
                           className={`w-32 text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                          Application Name
+                          Name
                         </label>
                         <input
                           id={`edit-name-${app.id}`}
@@ -211,7 +245,7 @@ export const ApplicationSettings = ({ isDarkMode = false }: ApplicationSettingsP
                         <label
                           htmlFor={`edit-url-${app.id}`}
                           className={`w-32 text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                          Application URL
+                          URL
                         </label>
                         <input
                           id={`edit-url-${app.id}`}
@@ -241,7 +275,7 @@ export const ApplicationSettings = ({ isDarkMode = false }: ApplicationSettingsP
                       <div className="flex-1">
                         <div className="flex items-center space-x-4">
                           <div>
-                            <h4 className={`font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
+                            <h4 className={`font-medium text-lg ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
                               {app.name}
                             </h4>
                             <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -253,6 +287,16 @@ export const ApplicationSettings = ({ isDarkMode = false }: ApplicationSettingsP
                                 {app.url}
                               </a>
                             </p>
+                            {app.domainKnowledge && (
+                              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                                <span className="font-bold">Domain Knowledge:</span> {app.domainKnowledge}
+                              </p>
+                            )}
+                            {app.uiCustomization && (
+                              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                                <span className="font-bold">UI Customization:</span> {app.uiCustomization}
+                              </p>
+                            )}
                           </div>
                         </div>
                       </div>
