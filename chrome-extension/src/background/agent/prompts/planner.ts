@@ -36,10 +36,10 @@ export class PlannerPrompt extends BasePrompt {
 The current application or website that we are working on has been identified as the "Launchpad" application. Use the following context to plan appropriate actions.
 
 ## Application Overview
-${launchpadOverview}
+${supportedApp.applicationKnowledgeContent}
 
 ## Domain Knowledge: Some common components used in Launchpad
-${launchpadDomainKnowledge}
+${supportedApp.domainKnowledgeContent}
 `;
       prompt += appSpecificKnowledge;
     }
