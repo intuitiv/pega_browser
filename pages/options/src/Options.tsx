@@ -8,13 +8,15 @@ import { ModelSettings } from './components/ModelSettings';
 import { FirewallSettings } from './components/FirewallSettings';
 import { AnalyticsSettings } from './components/AnalyticsSettings';
 import { ApplicationSettings } from './components/ApplicationSettings';
+import { MCPSettings } from './components/MCPSettings';
 
-type TabTypes = 'general' | 'models' | 'firewall' | 'analytics' | 'help' | 'applications';
+type TabTypes = 'general' | 'models' | 'firewall' | 'analytics' | 'help' | 'applications' | 'mcp';
 
 const TABS: { id: TabTypes; icon: string; label: string }[] = [
   { id: 'general', icon: '⚙️', label: t('options_tabs_general') },
   { id: 'models', icon: '📊', label: t('options_tabs_models') },
   { id: 'applications', icon: '📊', label: t('options_tabs_applications') },
+  { id: 'mcp', icon: '🔌', label: t('options_tabs_mcp') },
   { id: 'firewall', icon: '🔒', label: t('options_tabs_firewall') },
   { id: 'analytics', icon: '📈', label: 'Analytics' },
   { id: 'help', icon: '📚', label: t('options_tabs_help') },
@@ -51,6 +53,8 @@ const Options = () => {
         return <GeneralSettings isDarkMode={isDarkMode} />;
       case 'applications':
         return <ApplicationSettings isDarkMode={isDarkMode} />;
+      case 'mcp':
+        return <MCPSettings isDarkMode={isDarkMode} />;
       case 'models':
         return <ModelSettings isDarkMode={isDarkMode} />;
       case 'firewall':

@@ -208,6 +208,9 @@
   "options_tabs_applications": {
     "message": "模型"
   },
+  "options_tabs_mcp": {
+    "message": "MCP"
+  },
   "options_tabs_firewall": {
     "message": "防火牆"
   },

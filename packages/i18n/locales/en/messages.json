@@ -208,6 +208,9 @@
   "options_tabs_applications": {
     "message": "Applications"
   },
+  "options_tabs_mcp": {
+    "message": "MCP"
+  },
   "options_tabs_firewall": {
     "message": "Firewall"
   },
