@@ -48,7 +48,7 @@ export default function ChatInput({
     const textarea = textareaRef.current;
     if (textarea) {
       textarea.style.height = 'auto';
-      textarea.style.height = `${Math.min(textarea.scrollHeight, 100)}px`;
+      textarea.style.height = `${Math.min(textarea.scrollHeight, 80)}px`;
     }
   };
 
@@ -64,7 +64,7 @@ export default function ChatInput({
     const textarea = textareaRef.current;
     if (textarea) {
       textarea.style.height = 'auto';
-      textarea.style.height = `${Math.min(textarea.scrollHeight, 100)}px`;
+      textarea.style.height = `${Math.min(textarea.scrollHeight, 80)}px`;
     }
   }, []);
 
@@ -108,8 +108,8 @@ export default function ChatInput({
           onKeyDown={handleKeyDown}
           disabled={disabled}
           aria-disabled={disabled}
-          rows={5}
-          className={`w-full resize-none border-none p-2 focus:outline-none ${
+          rows={1}
+          className={`w-full resize-none border-none p-2 text-base focus:outline-none ${
             disabled
               ? isDarkMode
                 ? 'cursor-not-allowed bg-slate-800 text-gray-400'
