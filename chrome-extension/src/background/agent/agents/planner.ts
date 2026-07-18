@@ -103,7 +103,7 @@ export class PlannerAgent extends BaseAgent<typeof plannerOutputSchema, PlannerO
       };
 
       const finalPlan = { ...cleanedPlan };
-      if (this.context.initialActor === 'navigator') {
+      if (this.context.initialActor === 'navigator' && finalPlan.next_steps) {
         finalPlan.user_facing_plan = `\nNext steps are:\n${finalPlan.next_steps}`;
       }
 
